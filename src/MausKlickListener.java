@@ -13,7 +13,8 @@ public class MausKlickListener implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        new SpielLogik(i_arr, j_arr);
+        //new SpielLogik(i_arr, j_arr);
+        System.out.println("MausKlickListener - WTFFFFF");
     }
 
     @Override

@@ -65,5 +65,4 @@ public class Startbildschirm {
         SpielGUI gui = new SpielGUI("spiel");
         fenster.repaint();
     }
-
 }

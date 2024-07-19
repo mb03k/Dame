@@ -1,13 +1,34 @@
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static java.lang.System.exit;
 
 public class SpielGUI extends Startbildschirm {
 
     private String modus;
-    protected JPanel[][] spielfigurenOrte = new JPanel[][] {
+
+    protected int[][] spielfigurenOrteINT = new int[][]{
+            // Spielaufbau (PGN -> 'Portable Game Notation')
+            //a  b  c  d  e  f  g  h
+            // 0 = null
+            // 1 = bauer schawrz
+            // 2 = dame schwarz
+            // 3 = bauer weiß
+            // 4 = dame weiß
+            {0, 1, 0, 1, 0, 1, 0, 1},
+            {1, 0, 1, 0, 1, 0, 1, 0},
+            {0, 1, 0, 1, 0, 1, 0, 1},
+            {0, 0, 0, 0, 2, 0, 0, 0},
+            {0, 0, 0, 4, 0, 0, 0, 0},
+            {3, 0, 3, 0, 3, 0, 3, 0},
+            {0, 3, 0, 3, 0, 3, 0, 3},
+            {3, 0, 3, 0, 3, 0, 3, 0}
+    };
+
+    protected JPanel[][] spielfigurenOrteJPANEL = new JPanel[][] {
         // Spielaufbau (PGN -> 'Portable Game Notation')
         //a  b  c  d  e  f  g  h
         { null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black") },
@@ -20,7 +41,8 @@ public class SpielGUI extends Startbildschirm {
         { new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null },
     };
 
-    private JFrame fenster;
+    private JButton play;
+   // private JFrame fenster;
     private JPanel[][] feld;
     private JMenuBar menueLeiste;
     private JMenu dateiMenue;
@@ -29,12 +51,14 @@ public class SpielGUI extends Startbildschirm {
     private JMenuItem speichern;
     private int option;
 
+    private SpielLogik logik;
+
     public SpielGUI() {
 
     }
 
     public SpielGUI(String mod) {
-        this.fenster = Startbildschirm.fenster;
+        //this.fenster = Startbildschirm.fenster;
         this.modus = mod;
 
         // Menüleiste
@@ -53,6 +77,8 @@ public class SpielGUI extends Startbildschirm {
 
         setSpielfeld();
 
+        logik = new SpielLogik();
+
         fenster.setVisible(true);
     }
 
@@ -64,7 +90,24 @@ public class SpielGUI extends Startbildschirm {
         for ( int i=0; i<8; i++ ) { // vertikal
             for ( int j=0; j<8; j++ ) { // horizontal
                 JPanel panel = new JPanel();
-                panel.addMouseListener(new MausKlickListener(i, j));
+
+                final int iter = i; // sonst Fehler beim Übergeben im ActionListener
+                final int jter = j;
+
+                // GEHT SO!!!!
+                play = new JButton("");
+                play.addActionListener(e -> logik.setAttributes(iter, jter));
+
+                // Button unsichtbar machen
+                play.setBorderPainted(false);
+                play.setContentAreaFilled(false);
+                play.setFocusPainted(false);
+                play.setOpaque(false);
+
+                panel.add(play);
+
+                //panel.addMouseListener(new MausKlickListener(i, j)); ersetzt mit JButton
+
                 feld[i][j] = panel;
                 feld[i][j].setLayout(new GridLayout());
                 fenster.add(feld[i][j]);
@@ -81,12 +124,14 @@ public class SpielGUI extends Startbildschirm {
                 checkModus(i, j);
             }
         }
+        feld[0][1] = null;
+        System.out.println("Feld = null");
         checkModus();
     }
 
     public void checkModus(int i, int j) {
         if (modus.equals("spiel")) {
-            setSpielfigur(i, j);
+            setSpielfigurINT(i, j);
         }
     }
 
@@ -114,9 +159,39 @@ public class SpielGUI extends Startbildschirm {
         }
     }
 
-    public void setSpielfigur(int i, int j) {
-        if (!(spielfigurenOrte[i][j] == null)) {
-            feld[i][j].add(spielfigurenOrte[i][j]);
+    public void setSpielfigurINT(int i, int j) {
+        switch (spielfigurenOrteINT[i][j]) {
+            case 1: // Bauer schwarz
+                SpFigZeichnen figur1 = new SpFigZeichnen("black");
+                play.add(figur1);
+                fenster.add(feld[i][j]);
+                break;
+
+            case 2: // Dame schwarz
+                DameZeichnen figur3 = new DameZeichnen("black");
+                play.add(figur3);
+                fenster.add(feld[i][j]);
+                break;
+
+            case 3: // Bauer weiß
+                SpFigZeichnen figur2 = new SpFigZeichnen("white");
+                play.add(figur2);
+                fenster.add(feld[i][j]);
+                break;
+
+            case 4: // Dame weiß
+                DameZeichnen figur4 = new DameZeichnen("white");
+                play.add(figur4);
+                fenster.add(feld[i][j]);
+                break;
+
+            default:
+        }
+    }
+
+    public void setSpielfigurJPANEL(int i, int j) {
+        if (!(spielfigurenOrteJPANEL[i][j] == null)) {
+            feld[i][j].add(spielfigurenOrteJPANEL[i][j]);
             fenster.add(feld[i][j]);
         }
     }
@@ -144,7 +219,23 @@ public class SpielGUI extends Startbildschirm {
         }
     }
 
-    public JPanel[][] getPGN() {
-        return spielfigurenOrte;
+    public JPanel[][] getPGN_JPANEL() {
+        return spielfigurenOrteJPANEL;
+    }
+
+    public int[][] getPGN_INT() {
+        /*System.out.println("1_getPGN:");
+        for (int i=0; i<8; i++) {
+            for (int j=0; j<8; j++) {
+                System.out.print(spielfigurenOrteINT[i][j]+"-");
+            }
+            System.out.println("");
+        }
+        System.out.println("---");*/
+        return spielfigurenOrteINT;
+    }
+
+    public void setSpielfigurenOrteINT(int[][] orte) {
+        this.spielfigurenOrteINT = orte;
     }
 }
