@@ -17,7 +17,7 @@ public class SpFigZeichnen extends JPanel {
         g2d.setColor(getColor());
 
         int diameter = Math.max(getWidth(), getHeight());
-        diameter *= 0.75;
+        diameter *= 0.7;
 
         int xOuter = (getWidth() - diameter) / 2;
         int yOuter = (getHeight() - diameter) / 2;

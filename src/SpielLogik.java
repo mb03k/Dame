@@ -1,6 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
-import java.sql.SQLOutput;
 
 public class SpielLogik {
 
@@ -8,9 +6,20 @@ public class SpielLogik {
     private int j_arr;
     private JPanel[][] PGN_JPANEL;
     private int[][] pgn;
+    private int[] schlagen;
+    private int[] jetztAberSchlagen;
 
     public SpielLogik() {
 
+    }
+
+    // wenn man schlagen kann -> noch implementieren
+    public void getSchlagmoeglichkeit() {
+        for(int i=0; i<8; i++) {
+            if (schlagen[i] > 0) {
+                //jetztAberSchlagen[i] =
+            }
+        }
     }
 
     public void setAttributes(int i, int j, int[][] pgn) {
@@ -19,10 +28,13 @@ public class SpielLogik {
         this.j_arr = j;
         this.pgn = pgn;
 
-        getFigur();
+        getSpielzuege();
     }
 
-    public int getFigur() {
+    public int getSpielzuege() {
+        //schlagen = new int[];
+        //jetztAberSchlagen = new int[];
+
         switch (pgn[i_arr][j_arr]) {
             case 1:
                 System.out.println("BAUER SCHWARZ - i:"+i_arr+" - j:"+j_arr);
@@ -51,145 +63,73 @@ public class SpielLogik {
         return 1;
     }
 
-
-    public void diagonaleLinks() {
-        int zaehler = j_arr+1;
-        // oberere rechte Diagonale - Weiß
-        for (int i=i_arr-1; i>=0; i--) {
-            if (pgn[i][zaehler] == 0) {
-                System.out.println("Diagonal Rechts: "+i+" - "+zaehler+" ist frei!!!");
-            } else {
-                System.out.println("Diagonal Rechts: "+i+" - "+zaehler+" ist BESETZT!!!");
+    public void diagonaleLROben(int wert) {
+        int zaehler = (j_arr + wert);
+        try {
+            // nach oben links oder rechts -> weiß
+            for (int i=i_arr-1; i>=0; i--) {
+                if (pgn[i][zaehler] == 0) {
+                    if (wert<0) {
+                        System.out.println("o_Diagonal Rechts: "+i+" - "+zaehler);
+                    } else {
+                        System.out.println("o_Diagonal Links: "+i+" - "+zaehler);
+                    }
+                } else {
+                    if (wert<0) {
+                        System.out.println("o_Diagonal Rechts: "+i+" - "+zaehler+" BESETZT!!!");
+                    } else {
+                        System.out.println("o_Diagonal Links: "+i+" - "+zaehler+" BESETZT!!!");
+                    }
+                }
+                zaehler += wert;
             }
-            zaehler++;
-        }
+        } catch (ArrayIndexOutOfBoundsException ignored) {}
+    }
+
+    public void diagonaleLRUnten(int wert) {
+        int zaehler = (j_arr - wert);
+        try {
+            // nach unten links oder rechts -> schwarz
+            for (int i = i_arr + 1; i < 8; i++) {
+                if (pgn[i][zaehler] == 0) {
+                    if (wert < 0) {
+                        System.out.println("u_Diagonal Links: " + i + " - " + zaehler);
+                    } else {
+                        System.out.println("u_Diagonal Rechts: " + i + " - " + zaehler);
+                    }
+                } else {
+                    if (wert < 0) {
+                        System.out.println("u_Diagonal Links: " + i + " - " + zaehler + " BESETZT!!!");
+                    } else {
+                        System.out.println("u_Diagonal Rechts: " + i + " - " + zaehler + " BESETZT!!!");
+                    }
+                }
+                zaehler -= wert;
+            }
+        } catch (ArrayIndexOutOfBoundsException ignored) {}
     }
 
     public void pruefeSpielzuegeWHITE() {
-        try {
-            int zaehler = j_arr+1;
-            // oberere rechte Diagonale - Weiß
-            for (int i=i_arr-1; i>=0; i--) {
-                if (pgn[i][zaehler] == 0) {
-                    System.out.println("Diagonal Rechts: "+i+" - "+zaehler+" ist frei!!!");
-                } else {
-                    System.out.println("Diagonal Rechts: "+i+" - "+zaehler+" ist BESETZT!!!");
-                }
-                zaehler++;
-            }
-        } catch(ArrayIndexOutOfBoundsException e) {
-            System.out.println("OutOfBounds! ");
-        }
-
-        try {
-            // obere linke Diagonale
-            int zaehler = j_arr-1;
-            for (int i=i_arr-1; i>=0; i--) {
-                if (pgn[i][zaehler] == 0) {
-                    System.out.println("Diagonal links: "+i+" - "+zaehler+" ist frei!!!");
-                } else {
-                    System.out.println("Diagonal links: "+i+" - "+zaehler+" ist BESETZT!!!");
-                }
-                zaehler--;
-            }
-        } catch(ArrayIndexOutOfBoundsException e) {
-            System.out.println("Bountsi");
-        }
+        diagonaleLROben(1);
+        diagonaleLROben(-1);
     }
 
     public void pruefeSpielzuegeBLACK() {
-        try {
-            int zaehler = j_arr+1;
-            // untere rechte Diagonale - Schwarz
-            for (int i = i_arr + 1; i <= 8; i++) {
-                if (pgn[i][zaehler] == 0) {
-                    System.out.println("Untere rechte Diagonale: " + i + " - " + zaehler + " ist frei!!!");
-                } else {
-                    System.out.println("Untere rechte Diagonale: " + i + " - " + zaehler + " ist BESETZT!!!");
-                }
-                zaehler++;
-            }
-        } catch(ArrayIndexOutOfBoundsException e) {
-            System.out.println("OutOfBounds!");
-        }
-
-        try {
-            // untere linke Diagonale
-            int zaehler = j_arr-1;
-            for (int i=i_arr+1; i<=8; i++) {
-                if (pgn[i][zaehler] == 0) {
-                    System.out.println("Untere linke Diagonale : "+i+" - "+zaehler+" ist frei!!!");
-                } else {
-                    System.out.println("Untere linke Diagonale : "+i+" - "+zaehler+" ist BESETZT!!!");
-                }
-                zaehler--;
-            }
-        } catch(ArrayIndexOutOfBoundsException e) {
-            System.out.println("BountsiBounts");
-        }
+        diagonaleLRUnten(1);
+        diagonaleLRUnten(-1);
     }
 
     public void pruefeSpielzuegeDameWHITE() {
-        try {
-            int zaehler = j_arr+1;
-            // untere rechte Diagonale - Schwarz
-            for (int i = i_arr + 1; i <= 8; i++) {
-                if (pgn[i][zaehler] == 0) {
-                    System.out.println("Untere rechte Diagonale: " + i + " - " + zaehler + " ist frei!!!");
-                } else {
-                    System.out.println("Untere rechte Diagonale: " + i + " - " + zaehler + " ist BESETZT!!!");
-                }
-                zaehler++;
-            }
-        } catch(ArrayIndexOutOfBoundsException e) {
-            System.out.println("OutOfBounds!");
-        }
-
-        try {
-            // untere linke Diagonale
-            int zaehler = j_arr-1;
-            for (int i=i_arr+1; i<=8; i++) {
-                if (pgn[i][zaehler] == 0) {
-                    System.out.println("Untere linke Diagonale : "+i+" - "+zaehler+" ist frei!!!");
-                } else {
-                    System.out.println("Untere linke Diagonale : "+i+" - "+zaehler+" ist BESETZT!!!");
-                }
-                zaehler--;
-            }
-        } catch(ArrayIndexOutOfBoundsException e) {
-            System.out.println("BountsiBounts");
-        }
+        diagonaleLROben(1);
+        diagonaleLROben(-1);
+        diagonaleLRUnten(1);
+        diagonaleLRUnten(-1);
     }
 
     public void pruefeSpielzuegeDameBLACK() {
-        try {
-            int zaehler = j_arr+1;
-            // untere rechte Diagonale - Schwarz
-            for (int i = i_arr + 1; i <= 8; i++) {
-                if (pgn[i][zaehler] == 0) {
-                    System.out.println("Untere rechte Diagonale: " + i + " - " + zaehler + " ist frei!!!");
-                } else {
-                    System.out.println("Untere rechte Diagonale: " + i + " - " + zaehler + " ist BESETZT!!!");
-                }
-                zaehler++;
-            }
-        } catch(ArrayIndexOutOfBoundsException e) {
-            System.out.println("OutOfBounds!");
-        }
-
-        try {
-            // untere linke Diagonale
-            int zaehler = j_arr-1;
-            for (int i=i_arr+1; i<=8; i++) {
-                if (pgn[i][zaehler] == 0) {
-                    System.out.println("Untere linke Diagonale : "+i+" - "+zaehler+" ist frei!!!");
-                } else {
-                    System.out.println("Untere linke Diagonale : "+i+" - "+zaehler+" ist BESETZT!!!");
-                }
-                zaehler--;
-            }
-        } catch(ArrayIndexOutOfBoundsException e) {
-            System.out.println("BountsiBounts");
-        }
+        diagonaleLROben(1);
+        diagonaleLROben(-1);
+        diagonaleLRUnten(1);
+        diagonaleLRUnten(-1);
     }
 }
