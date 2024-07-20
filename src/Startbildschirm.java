@@ -56,13 +56,18 @@ public class Startbildschirm {
 
     public void starteDebug() {
         fenster.getContentPane().removeAll();
-        SpielGUI gui = new SpielGUI("debug");
+        SpielGUI gui = new SpielGUI();
+        gui.setModus("debug");
+        gui.setSpielfeld();
         fenster.repaint();
     }
 
     public void starteSpiel() {
         fenster.getContentPane().removeAll();
-        SpielGUI gui = new SpielGUI("spiel");
+        SpielGUI gui = new SpielGUI();
+        gui.setModus("spiel");
+        gui.setStandardPGN();
+        gui.setSpielfeld();
         fenster.repaint();
     }
 }

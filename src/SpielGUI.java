@@ -6,43 +6,12 @@ import java.awt.event.ActionListener;
 
 import static java.lang.System.exit;
 
-public class SpielGUI extends Startbildschirm {
+public class SpielGUI {
 
     private String modus;
-
-    protected int[][] spielfigurenOrteINT = new int[][]{
-            // Spielaufbau (PGN -> 'Portable Game Notation')
-            //a  b  c  d  e  f  g  h
-            // 0 = null
-            // 1 = bauer schawrz
-            // 2 = dame schwarz
-            // 3 = bauer weiß
-            // 4 = dame weiß
-            {0, 1, 0, 1, 0, 1, 0, 1},
-            {1, 0, 1, 0, 1, 0, 1, 0},
-            {0, 1, 0, 1, 0, 1, 0, 1},
-            {0, 0, 0, 0, 2, 0, 0, 0},
-            {0, 0, 0, 4, 0, 0, 0, 0},
-            {3, 0, 3, 0, 3, 0, 3, 0},
-            {0, 3, 0, 3, 0, 3, 0, 3},
-            {3, 0, 3, 0, 3, 0, 3, 0}
-    };
-
-    protected JPanel[][] spielfigurenOrteJPANEL = new JPanel[][] {
-        // Spielaufbau (PGN -> 'Portable Game Notation')
-        //a  b  c  d  e  f  g  h
-        { null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black") },
-        { new SpFigZeichnen("black"), null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black"), null },
-        { null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black"), null, new SpFigZeichnen("black") },
-        { null, null, new DameZeichnen("black"), new DameZeichnen("white"), null, null, null, null },
-        { null, null, null, null, null, null, null, null },
-        { new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null },
-        { null, new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null, new SpFigZeichnen("white") },
-        { new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null, new SpFigZeichnen("white"), null },
-    };
-
+    protected int[][] pgn=new int[8][8];
     private JButton play;
-   // private JFrame fenster;
+    private JFrame fenster;
     private JPanel[][] feld;
     private JMenuBar menueLeiste;
     private JMenu dateiMenue;
@@ -50,34 +19,28 @@ public class SpielGUI extends Startbildschirm {
     private JMenuItem startseite;
     private JMenuItem speichern;
     private int option;
+    protected int[][] afterDebugPGN;
 
     private SpielLogik logik;
+    private DebugModus debug;
 
     public SpielGUI() {
-
     }
 
-    public SpielGUI(String mod) {
-        //this.fenster = Startbildschirm.fenster;
-        this.modus = mod;
+    public void setModus(String modus) {
+        this.modus = modus;
+        starteGUI();
+    }
 
-        // Menüleiste
-        menueLeiste = new JMenuBar();
-        dateiMenue = new JMenu("Datei");
-        speichern = new JMenuItem("Speichern\tstrg-s");
-        startseite = new JMenuItem("Startseite");
-        startseite.addActionListener(e -> setStartseite());
-        beenden = new JMenuItem("Beenden");
-        beenden.addActionListener(e -> exit(0));
-        dateiMenue.add(speichern);
-        dateiMenue.add(startseite);
-        dateiMenue.add(beenden);
-        menueLeiste.add(dateiMenue);
-        fenster.setJMenuBar(menueLeiste);
-
-        setSpielfeld();
-
+    public void starteGUI() {
+        this.fenster = Startbildschirm.fenster;
         logik = new SpielLogik();
+        debug = new DebugModus();
+        this.afterDebugPGN = new int[8][8];
+
+        setMenueBar();
+
+        //setSpielfeld();
 
         fenster.setVisible(true);
     }
@@ -89,14 +52,12 @@ public class SpielGUI extends Startbildschirm {
         // Spielfeld (und Farben) erstellen
         for ( int i=0; i<8; i++ ) { // vertikal
             for ( int j=0; j<8; j++ ) { // horizontal
-                JPanel panel = new JPanel();
 
-                final int iter = i; // sonst Fehler beim Übergeben im ActionListener
-                final int jter = j;
+                JPanel panel = new JPanel();
 
                 // GEHT SO!!!!
                 play = new JButton("");
-                play.addActionListener(e -> logik.setAttributes(iter, jter));
+                setSpielfeldButton(i,j);
 
                 // Button unsichtbar machen
                 play.setBorderPainted(false);
@@ -105,8 +66,6 @@ public class SpielGUI extends Startbildschirm {
                 play.setOpaque(false);
 
                 panel.add(play);
-
-                //panel.addMouseListener(new MausKlickListener(i, j)); ersetzt mit JButton
 
                 feld[i][j] = panel;
                 feld[i][j].setLayout(new GridLayout());
@@ -121,46 +80,90 @@ public class SpielGUI extends Startbildschirm {
 
                 feld[i][j].setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
-                checkModus(i, j);
+                setSpielfigur(i, j);
             }
         }
-        feld[0][1] = null;
-        System.out.println("Feld = null");
         checkModus();
     }
 
-    public void checkModus(int i, int j) {
-        if (modus.equals("spiel")) {
-            setSpielfigurINT(i, j);
-        }
+    public void setMenueBar() {
+        // Menüleiste
+        menueLeiste = new JMenuBar();
+        dateiMenue = new JMenu("Datei");
+        speichern = new JMenuItem("Speichern\tstrg-s");
+        startseite = new JMenuItem("Startseite");
+        startseite.addActionListener(e -> setStartseite());
+        beenden = new JMenuItem("Beenden");
+        beenden.addActionListener(e -> exit(0));
+        dateiMenue.add(speichern);
+        dateiMenue.add(startseite);
+        dateiMenue.add(beenden);
+        menueLeiste.add(dateiMenue);
+        fenster.setJMenuBar(menueLeiste);
     }
 
     public void checkModus() {
         // wenn Benutzer Debug-Modus angeklickt hat neuen Menüpunkt erstellen
         if (modus.equals("debug")) {
             JMenu debug = new JMenu("Debug");
-            JMenuItem wFigur = new JMenuItem("Weiße Spielfigur");
-            JMenuItem bFigur = new JMenuItem("Schwarze Spielfigur");
+            JMenuItem wBauer = new JMenuItem("Weiße Spielfigur");
+            JMenuItem bBauer = new JMenuItem("Schwarze Spielfigur");
             JMenuItem wDame = new JMenuItem("Weiße Dame");
             JMenuItem bDame = new JMenuItem("Schwarze Dame");
             JMenuItem spielStarten = new JMenuItem("Spiel starten");
 
-            wFigur.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-            bFigur.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            wBauer.addActionListener(e -> debugSetzeSpielfigur(3));
+            bBauer.addActionListener(e -> debugSetzeSpielfigur(1));
+            wDame.addActionListener(e -> debugSetzeSpielfigur(4));
+            bDame.addActionListener(e -> debugSetzeSpielfigur(2));
+            spielStarten.addActionListener(e -> debugStarten());
+
+            wBauer.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            bBauer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             wDame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             bDame.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
             debug.add(wDame);
-            debug.add(wFigur);
+            debug.add(wBauer);
             debug.add(bDame);
-            debug.add(bFigur);
+            debug.add(bBauer);
             debug.add(spielStarten);
             menueLeiste.add(debug);
         }
     }
 
-    public void setSpielfigurINT(int i, int j) {
-        switch (spielfigurenOrteINT[i][j]) {
+    public void debugStarten() {
+        this.modus = "spiel";
+        fenster.setJMenuBar(null);
+        setMenueBar();
+        fenster.getContentPane().removeAll();
+        setPGN(afterDebugPGN);
+        setSpielfeld();
+        fenster.repaint();
+    }
+
+    public void setSpielfeldButton(int i, int j) {
+        if (modus.equals("spiel")) {
+            play.addActionListener(e -> logik.setAttributes(i, j, pgn));
+        } else {
+            play.addActionListener(e -> aktualisierePNG_debug(i, j));
+        }
+    }
+
+    public void setStandardPGN() {
+        this.pgn = new int[][] {
+            {0, 1, 0, 1, 0, 1, 0, 1},
+            {1, 0, 1, 0, 1, 0, 1, 0},
+            {0, 1, 0, 1, 0, 1, 0, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {3, 0, 3, 0, 3, 0, 3, 0},
+            {0, 3, 0, 3, 0, 3, 0, 3},
+            {3, 0, 3, 0, 3, 0, 3, 0}};
+    }
+
+    public void setSpielfigur(int i, int j) {
+        switch (pgn[i][j]) {
             case 1: // Bauer schwarz
                 SpFigZeichnen figur1 = new SpFigZeichnen("black");
                 play.add(figur1);
@@ -189,11 +192,15 @@ public class SpielGUI extends Startbildschirm {
         }
     }
 
-    public void setSpielfigurJPANEL(int i, int j) {
-        if (!(spielfigurenOrteJPANEL[i][j] == null)) {
-            feld[i][j].add(spielfigurenOrteJPANEL[i][j]);
-            fenster.add(feld[i][j]);
-        }
+    public void aktualisierePNG_debug(int i, int j) {
+        // live anzeigen der neuen Steine
+        afterDebugPGN[i][j] = debug.getDebugFigur();
+        fenster.getContentPane().removeAll();
+        fenster.setJMenuBar(null);
+        setMenueBar();
+        pgn[i][j] = debug.getDebugFigur();
+        setSpielfeld();
+        fenster.repaint();
     }
 
     public void infoBox() {
@@ -214,28 +221,25 @@ public class SpielGUI extends Startbildschirm {
                 fenster.getContentPane().removeAll();
                 fenster.setJMenuBar(null);
                 fenster.repaint();
-                setStartbildschirm();
+                Startbildschirm sb = new Startbildschirm();
+                sb.setStartbildschirm();
             }
         }
     }
 
-    public JPanel[][] getPGN_JPANEL() {
-        return spielfigurenOrteJPANEL;
+    public void debugSetzeSpielfigur(int figur) {
+        debug.setFigur(figur);
     }
 
-    public int[][] getPGN_INT() {
-        /*System.out.println("1_getPGN:");
-        for (int i=0; i<8; i++) {
-            for (int j=0; j<8; j++) {
-                System.out.print(spielfigurenOrteINT[i][j]+"-");
-            }
-            System.out.println("");
-        }
-        System.out.println("---");*/
-        return spielfigurenOrteINT;
+    public int[][] getPGN() {
+        return pgn;
     }
 
-    public void setSpielfigurenOrteINT(int[][] orte) {
-        this.spielfigurenOrteINT = orte;
+    public void setSpielfiguren(int[][] orte) {
+        this.pgn = orte;
+    }
+
+    public void setPGN(int[][] pgn) {
+        this.pgn = pgn;
     }
 }
