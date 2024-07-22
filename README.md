@@ -16,7 +16,8 @@ Falls erfolgt, funktioniert es bei mir mit den Befehlen:
    Per 'git status' aktuellen Status einsehen, 'git branch' aktuelle Repository (?)
 
 To-Dos:
--
--
+- einfach ALLES nochmal überarbeiten -> sauberer und verständlicher gestalten
+- Spielfeld beschriftung hinzufügen (1-8 und a-h)
+- Spielspeicherung?
 -
 ...
