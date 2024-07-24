@@ -55,6 +55,7 @@ public class Startbildschirm {
     }
 
     public void starteDebug() {
+        // Startbildschirm entfernen
         fenster.getContentPane().removeAll();
         SpielGUI gui = new SpielGUI();
         gui.setModus("debug");
@@ -63,6 +64,7 @@ public class Startbildschirm {
     }
 
     public void starteSpiel() {
+        // Startbildschirm entfernen
         fenster.getContentPane().removeAll();
         SpielGUI gui = new SpielGUI();
         gui.setModus("spiel");

@@ -4,9 +4,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
+// AKTUELLER PLAN:
+
+// Schwarz weiß schwarz weiß,...
+
+/*
+* Mögliche Züge zeichnen:
+* eventuell neue PGN für die Farben erstellen und da die farbe einfach färben?
+* */
+
+// JPanels mit Objekten füllen? -> für die
+
 import static java.lang.System.exit;
 
-public class SpielGUI {
+public class SpielGUI extends Main {
 
     private String modus;
     protected int[][] pgn=new int[8][8];
@@ -20,9 +32,16 @@ public class SpielGUI {
     private JMenuItem speichern;
     private int option;
     protected int[][] afterDebugPGN;
+    private JPanel secondPanel;
+    private JPanel innerFirstRow;
+    private JPanel innerMiddleRow;
+    private JPanel innerThirdRow;
+    private String zug_grid = "Weiß";
 
     private SpielLogik logik;
     private DebugModus debug;
+
+    protected boolean werIstDran = true; // true -> weiß; false -> schwarz
 
     public SpielGUI() {
     }
@@ -40,14 +59,14 @@ public class SpielGUI {
 
         setMenueBar();
 
-        //setSpielfeld();
-
         fenster.setVisible(true);
     }
 
     public void setSpielfeld() {
-        fenster.setLayout(new GridLayout(8,8));
+        setGridLayout();
+
         feld = new JPanel[8][8];
+
 
         // Spielfeld (und Farben) erstellen
         for ( int i=0; i<8; i++ ) { // vertikal
@@ -59,17 +78,11 @@ public class SpielGUI {
                 play = new JButton("");
                 setSpielfeldButton(i,j);
 
-                // Button unsichtbar machen
-                play.setBorderPainted(false);
-                play.setContentAreaFilled(false);
-                play.setFocusPainted(false);
-                play.setOpaque(false);
-
                 panel.add(play);
 
                 feld[i][j] = panel;
                 feld[i][j].setLayout(new GridLayout());
-                fenster.add(feld[i][j]);
+                innerMiddleRow.add(feld[i][j]);
 
                 feld[i][j].setOpaque(true);
                 feld[i][j].setBackground(Color.GRAY);
@@ -78,7 +91,11 @@ public class SpielGUI {
                     feld[i][j].setBackground(Color.DARK_GRAY);
                 }
 
-                feld[i][j].setBorder(BorderFactory.createLineBorder(Color.WHITE));
+                // Button unsichtbar machen
+                play.setBorderPainted(false);
+                play.setContentAreaFilled(false);
+                play.setFocusPainted(false);
+                play.setOpaque(false);
 
                 setSpielfigur(i, j);
             }
@@ -112,10 +129,10 @@ public class SpielGUI {
             JMenuItem bDame = new JMenuItem("Schwarze Dame");
             JMenuItem spielStarten = new JMenuItem("Spiel starten");
 
-            wBauer.addActionListener(e -> debugSetzeSpielfigur(3));
-            bBauer.addActionListener(e -> debugSetzeSpielfigur(1));
             wDame.addActionListener(e -> debugSetzeSpielfigur(4));
+            wBauer.addActionListener(e -> debugSetzeSpielfigur(3));
             bDame.addActionListener(e -> debugSetzeSpielfigur(2));
+            bBauer.addActionListener(e -> debugSetzeSpielfigur(1));
             spielStarten.addActionListener(e -> debugStarten());
 
             wBauer.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
@@ -132,7 +149,65 @@ public class SpielGUI {
         }
     }
 
+    public void setGridLayout() {
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(0,0,0,0);
+
+        // Panel for the first line
+        JPanel firstPanel = new JPanel();
+        JLabel label = new JLabel("Zug von: "+zug_grid);
+        label.setForeground(Color.WHITE);
+        label.setFont(new Font("Arial", Font.BOLD, 20));
+
+        firstPanel.add(label);
+        firstPanel.setBackground(Color.DARK_GRAY);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        fenster.add(firstPanel, gbc);
+
+        // Second panel with three rows
+        secondPanel = new JPanel(new GridBagLayout());
+        gbc.weighty = 0.8; // 80% of the height
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        fenster.add(secondPanel, gbc);
+
+        // Constraints for the inner rows of the second panel
+        GridBagConstraints innerGbc = new GridBagConstraints();
+        innerGbc.fill = GridBagConstraints.BOTH;
+        innerGbc.weightx = 1.0;
+        innerGbc.weighty = 1.0;
+
+        // First inner row
+        innerFirstRow = new JPanel();
+        innerFirstRow.setBackground(Color.DARK_GRAY);
+        innerGbc.gridx = 0;
+        innerGbc.gridy = 0;  // This should remain 0
+        secondPanel.add(innerFirstRow, innerGbc);
+
+        // Middle inner row
+        innerMiddleRow = new JPanel();
+        innerMiddleRow.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        innerMiddleRow.setLayout(new GridLayout(8,8));
+        innerMiddleRow.setBackground(Color.DARK_GRAY);
+        innerGbc.gridx = 1;  // This should be 0
+        innerGbc.gridy = 0;  // Change to 1 to place in the second row
+        secondPanel.add(innerMiddleRow, innerGbc);
+
+        // Third inner row
+        innerThirdRow = new JPanel();
+        innerThirdRow.setBackground(Color.DARK_GRAY);
+        innerGbc.gridx = 2;  // This should be 0
+        innerGbc.gridy = 0;  // Change to 2 to place in the third row
+        secondPanel.add(innerThirdRow, innerGbc);
+
+    }
+
     public void debugStarten() {
+        // alles neu zeichnen und spiellogik starten
         this.modus = "spiel";
         fenster.setJMenuBar(null);
         setMenueBar();
@@ -144,14 +219,41 @@ public class SpielGUI {
 
     public void setSpielfeldButton(int i, int j) {
         if (modus.equals("spiel")) {
-            play.addActionListener(e -> logik.setAttributes(i, j, pgn));
+            setSollGeschlagenWerden(i,j);
         } else {
-            play.addActionListener(e -> aktualisierePNG_debug(i, j));
+            play.addActionListener(e -> aktualisierePGN_debug(i, j));
+        }
+    }
+
+    public void setSollGeschlagenWerden(int i, int j) {
+        if (pgn[i][j]==0) {
+            play.addActionListener(e -> schlageFigur(i, j));
+        } else {
+            play.addActionListener(e -> logik.setAttributes(i, j, pgn));
+        }
+    }
+
+    public void schlageFigur(int i, int j) {
+        int[][] temp = logik.schlage(i, j);
+        if (temp != null) {
+            pgn = temp;
+            fenster.getContentPane().removeAll();
+            fenster.setJMenuBar(null);
+            setMenueBar();
+            setSpielfeld();
+            fenster.repaint();
         }
     }
 
     public void setStandardPGN() {
         this.pgn = new int[][] {
+          // a, b, c, d, e, f, g, h
+        // 1 = Bauer schwarz
+        // 2 = Dame schwarz
+        // 3 = Bauer weiß
+        // 4 = Bauer schwarz
+        // 5 = feld ist Schlagbereit (markierung)
+        // 6 = Umrandung (noch einbauen?)
             {0, 1, 0, 1, 0, 1, 0, 1},
             {1, 0, 1, 0, 1, 0, 1, 0},
             {0, 1, 0, 1, 0, 1, 0, 1},
@@ -167,24 +269,30 @@ public class SpielGUI {
             case 1: // Bauer schwarz
                 SpFigZeichnen figur1 = new SpFigZeichnen("black");
                 play.add(figur1);
-                fenster.add(feld[i][j]);
+                innerMiddleRow.add(feld[i][j]);
                 break;
 
             case 2: // Dame schwarz
                 DameZeichnen figur3 = new DameZeichnen("black");
                 play.add(figur3);
-                fenster.add(feld[i][j]);
+                innerMiddleRow.add(feld[i][j]);
                 break;
 
             case 3: // Bauer weiß
                 SpFigZeichnen figur2 = new SpFigZeichnen("white");
                 play.add(figur2);
-                fenster.add(feld[i][j]);
+                innerMiddleRow.add(feld[i][j]);
                 break;
 
             case 4: // Dame weiß
                 DameZeichnen figur4 = new DameZeichnen("white");
                 play.add(figur4);
+                innerMiddleRow.add(feld[i][j]);
+                break;
+
+            case 6: // Rechteck
+                ZeichneRechteck figur5 = new ZeichneRechteck();
+                play.add(figur5);
                 fenster.add(feld[i][j]);
                 break;
 
@@ -192,7 +300,7 @@ public class SpielGUI {
         }
     }
 
-    public void aktualisierePNG_debug(int i, int j) {
+    public void aktualisierePGN_debug(int i, int j) {
         // live anzeigen der neuen Steine
         afterDebugPGN[i][j] = debug.getDebugFigur();
         fenster.getContentPane().removeAll();
@@ -229,14 +337,6 @@ public class SpielGUI {
 
     public void debugSetzeSpielfigur(int figur) {
         debug.setFigur(figur);
-    }
-
-    public int[][] getPGN() {
-        return pgn;
-    }
-
-    public void setSpielfiguren(int[][] orte) {
-        this.pgn = orte;
     }
 
     public void setPGN(int[][] pgn) {
