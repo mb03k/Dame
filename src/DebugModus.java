@@ -9,23 +9,24 @@ public class DebugModus extends SpielGUI{
         this.figur = figur;
     }
 
+    // Debug-Modus: gibt die ausgewählte Figur zurück
     public int getDebugFigur() {
         switch(figur) {
-            case 1:
+            case -1:
                 System.out.println("Switch 1");
+                return -1;
+
+            case -2:
+                System.out.println("Switch 2");
+                return -2;
+
+            case 1:
+                System.out.println("Switch 3");
                 return 1;
 
             case 2:
-                System.out.println("Switch 2");
-                return 2;
-
-            case 3:
-                System.out.println("Switch 3");
-                return 3;
-
-            case 4:
                 System.out.println("Switch 4");
-                return 4;
+                return 2;
 
             default:
                 System.out.println("Switch 0");

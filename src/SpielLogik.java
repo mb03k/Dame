@@ -28,6 +28,7 @@ public class SpielLogik {
         this.j_arr = j;
         this.aktuelleFigur = pgn[i][j];
         this.pgn = pgn;
+        System.out.println("SET ATTRIBUTES");
     }
 
     public int[][] schlage(int newI, int newJ) { // wenn leeres Feld angeklickt wird
@@ -36,31 +37,33 @@ public class SpielLogik {
         this.newJ = newJ;
 
         switch(aktuelleFigur) {
-            case 1: // Bauer schwarz
-                checkUntenSchlagen(1); // links
+            case -1: // Bauer schwarz
+                /*checkUntenSchlagen(1); // links
                 if(setSchlagUnten()) break;
                 checkUntenSchlagen(-1);
                 if(setSchlagUnten()) break;
 
                 setBewegenUnten(1);
-                setBewegenUnten(-1);
+                setBewegenUnten(-1);*/
+                checkSchlagen();
                 break;
 
-            case 2: // Dame schwarz
+            case -2: // Damen
                 bewegeDame();
                 break;
 
-            case 3: // Bauer weiß
-                checkObenSchlagen(-1); // links
+            case 1: // Bauer weiß
+                checkSchlagen();
+                /*checkObenSchlagen(-1); // links
                 if(setSchlagOben()) break;
                 checkObenSchlagen(1);
                 if(setSchlagOben()) break;
 
                 setBewegenOben(-1);
-                setBewegenOben(1);
+                setBewegenOben(1);*/
                 break;
 
-            case 4: // Dame weiß
+            case 2: // Damen
                 bewegeDame();
                 break;
 
@@ -90,7 +93,7 @@ public class SpielLogik {
 
     public void bewegeDame() {
         if (!setzeDame()) { // Figur wurde von Dame NICHT geschlagen
-            // Dame bewegen
+            // Dame bewegen (zeichnen)
             if (pgn[newI][newJ] == 0 && checkDamenDiagonale()) { // wenn neues Feld leer ist
                 pgn[newI][newJ] = pgn[i_arr][j_arr]; // Dame auf leeres Feld zeichnen
                 pgn[i_arr][j_arr] = 0; // alten Ort leeren
@@ -122,27 +125,18 @@ public class SpielLogik {
                 return dameSchlagenOben(-1);
             }
         }
-        else if (i_arr < newI) { // nach unten (schwarz)
+        else { // nach unten (schwarz)
             if (j_arr < newJ) { // nach rechts
                 return dameSchlagenUnten(1);
             } else { // nach links
                 return dameSchlagenUnten(-1);
             }
         }
-
-        return false;
-    }
-
-    // wenn Dame eine Figur schlägt alles zeichnen
-    public void schlagenDame(int i_schlagenMitte, int j_schlagenMitte, int horizontaleRichtung, int vertikaleRichtung) {
-        pgn[i_schlagenMitte+vertikaleRichtung][j_schlagenMitte + horizontaleRichtung] = pgn[i_arr][j_arr]; // Dame auf leeres Feld zeichnen
-        pgn[i_arr][j_arr] = 0; // alten Ort leeren
-        pgn[i_schlagenMitte][j_schlagenMitte] = 0; // geschlagene Figur entfernen
     }
 
     // schlägt den Stein
-    public boolean dameSchlagenOben(int richtung) { // richtung -1 = links
-        int j_temp = (j_arr + richtung); // setzt es this.j_arr auf einen neuen Wert?
+    public boolean dameSchlagenOben(int richtung) { // richtung: -1 = oben links; 1 = oben rechts
+        int j_temp = (j_arr + richtung);
         int besetzteFelder = 0;
         int i_schlagenMitte = -1;
         int j_schlagenMitte = -1;
@@ -151,12 +145,13 @@ public class SpielLogik {
         // prüft NICHT ob auf dem Feld ein Stein liegt
         for (int i = (i_arr-1); i > newI; i--) {
             System.out.println("check: "+i + "-"+j_temp +" --- " + pgn[i][j_temp]);
-
-            if (pgn[i][j_temp] > 0) { // wenn Feld besetzt ist
+            if (pgn[i][j_temp] != 0) { // wenn Feld besetzt ist
                 besetzteFelder++;
             }
+            System.out.println("Besetzte Felder:" +besetzteFelder);
 
-            if ((pgn[i][j_temp] > 0) && (besetzteFelder == 1) ) { // wenn man schlagen kann indizes vom geschlagenen Stein setzen
+            // wenn man schlagen kann indizes vom geschlagenen Stein setzen
+            if ((pgn[i][j_temp] != 0) && (besetzteFelder == 1) ) {
                 i_schlagenMitte = i;
                 j_schlagenMitte = j_temp;
             }
@@ -164,30 +159,30 @@ public class SpielLogik {
             j_temp += richtung;
         }
 
+        // man kann nicht schlagen
         if (besetzteFelder == 1) { // schlagen
             schlagenDame(i_schlagenMitte, j_schlagenMitte, richtung, -1);
             return true;
-        } else {
-            return false;
-        }
+        } else return besetzteFelder > 1; // true wenn man nicht zeichnen soll
     }
 
-    public boolean dameSchlagenUnten(int richtung) { // richtung -1 = links
-        int j_temp = (j_arr + richtung); // setzt es this.j_arr auf einen neuen Wert?
+    public boolean dameSchlagenUnten(int richtung) { // richtung: -1 = unten links; 1 = unten rechts
+        int j_temp = (j_arr + richtung);
         int besetzteFelder = 0;
         int i_schlagenMitte = -1;
         int j_schlagenMitte = -1;
 
-        // läuft die Diagonale nach oben ab und schaut welche Felder besetzt sind
+        // läuft die Diagonale nach unten ab und schaut welche Felder besetzt sind
         // prüft NICHT ob auf dem neuen Feld ein Stein liegt
         for (int i = (i_arr+1); i < newI; i++) {
             //for (int i = newI; i < i_arr>; i-) {
-            if (pgn[i][j_temp] > 0) { // wenn Feld besetzt ist
+            if (pgn[i][j_temp] != 0) { // wenn Feld besetzt ist
                 besetzteFelder++;
             }
             System.out.println("check schwarz: "+i + "-"+j_temp +" --- " + pgn[i][j_temp]);
 
-            if ((pgn[i][j_temp] > 0) && (besetzteFelder == 1) ) { // wenn man schlagen kann indizes vom geschlagenen Stein setzen
+            // wenn man schlagen kann indizes vom geschlagenen Stein setzen
+            if ((pgn[i][j_temp] != 0) && (besetzteFelder == 1) ) {
                 i_schlagenMitte = i;
                 j_schlagenMitte = j_temp;
             }
@@ -198,9 +193,8 @@ public class SpielLogik {
         if (besetzteFelder == 1) { // schlagen
             schlagenDame(i_schlagenMitte, j_schlagenMitte, richtung, 1);
             return true;
-        } else {
-            return false;
-        }
+        } else return besetzteFelder > 1; // true wenn man nicht zeichnen soll
+
 
         /*if (besetzteFelder < 2) {
             System.out.println("DU KANNST SPRINGEN (SCHWARZ)!!!!" + richtung);
@@ -208,8 +202,139 @@ public class SpielLogik {
         }*/
     }
 
+    // wenn Dame eine Figur schlägt alles zeichnen
+    public void schlagenDame(int i_schlagenMitte, int j_schlagenMitte, int horizontaleRichtung, int vertikaleRichtung) {
+        pgn[i_schlagenMitte+vertikaleRichtung][j_schlagenMitte + horizontaleRichtung] = pgn[i_arr][j_arr]; // Dame auf leeres Feld zeichnen
+        pgn[i_arr][j_arr] = 0; // alten Ort leeren
+        pgn[i_schlagenMitte][j_schlagenMitte] = 0; // geschlagene Figur entfernen
+    }
+
     // ---------------------------------------------------------------------------------------------------
     // Bauern:
+
+
+
+
+        public void checkSchlagen() {
+            if (i_arr > newI) { // nach oben (weiß)
+                if (j_arr < newJ) { // nach rechts
+                    checkObenSchlagen(1);
+                } else {
+                    checkObenSchlagen(-1);
+                }
+            }
+            else { // nach unten (schwarz)
+                if (j_arr < newJ) { // nach rechts
+                    checkUntenSchlagen(1);
+                } else { // nach links
+                    checkUntenSchlagen(-1);
+                }
+            }
+        }
+
+        public void checkObenSchlagen(int richtung) { // für weiß (schwarz schlagen)
+            try {
+                if (pgn[i_arr - 1][j_arr + richtung] < 0) { // oben links oder rechts besetzt
+                    if ((pgn[i_arr - 2][j_arr + (richtung*2)] == 0)) { // ob geschlagen werden kann (zweites Feld frei)
+                        schlagenMitte_i = (i_arr + 1);
+                        schlagenMitte_j = (j_arr + richtung);
+                        bauerSchlagenOben(richtung);
+                    }
+                } else {
+                    checkBauerBewegen(-1, richtung);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        public void checkUntenSchlagen(int richtung) { // für schwarz (weiß schlagen)
+            try {
+                if (pgn[i_arr + 1][j_arr + richtung] > 0) { // oben links oder rechts besetzt
+                    if ((pgn[i_arr + 2][j_arr + (richtung*2)] == 0)) { // ob geschlagen werden kann (zweites Feld frei)
+                        schlagenMitte_i = (i_arr + 1);
+                        schlagenMitte_j = (j_arr + richtung);
+                        bauerSchlagenUnten(richtung);
+                    }
+                } else {
+                    checkBauerBewegen(1, richtung);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        public void bauerSchlagenOben(int richtung) {
+            // wenn neues Feld auf der richtigen i-Ebene liegt
+            if ((Math.abs(newI - i_arr) == 2) && (Math.abs(newJ - j_arr)) == 2) {
+                System.out.println("bauerSchlagenOben()");
+                pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf leeres Feld zeichnen
+                pgn[i_arr-1][j_arr+richtung] = 0; // geschlagene Figur entfernen
+                pgn[i_arr][j_arr] = 0; // alten Ort leeren
+            }
+        }
+
+        public void bauerSchlagenUnten(int richtung) {
+            // wenn neues Feld auf der richtigen i-Ebene liegt
+            if (Math.abs(newI - i_arr) == 2 && (Math.abs(newJ - j_arr)) == 2) {
+                System.out.println("bauerSchlagenUnten()");
+                pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf leeres Feld zeichnen
+                pgn[i_arr+1][j_arr+richtung] = 0; // geschlagene Figur entfernen
+                pgn[i_arr][j_arr] = 0; // alten Ort leeren
+            }
+        }
+
+        public void checkBauerBewegen(int richtungVertikal, int richtungHorizontal) {
+            try {
+                // MAN KANN NOCH NACH UNTEN GEHEN MIT DEN BAUERN
+                // Feld frei, richtige i-Ebene, richtige j-Ebene
+                if ((pgn[i_arr+richtungVertikal][j_arr+richtungHorizontal] == 0) && (Math.abs(newI - i_arr) == 1)
+                        && ((j_arr+richtungHorizontal) == newJ)) {
+                    bauerBewegenOben();
+                }
+            } catch (Exception ignored) {}
+        }
+
+        public void bauerBewegenOben() {
+            pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf neues Feld setzen
+            pgn[i_arr][j_arr] = 0; // altes Feld der Figur leeren
+        }
+
+
+
+
+
+
+
+    // ob neues Feld an das aktuelle angrenzt
+   /* public void checkAngrenzend(int richtung) {
+        // wenn erstes Feld besetzt
+        if (pgn[i_arr-1][j_arr+richtung] < 0) {
+            if (pgn[i_arr-2][j_arr+(richtung*2)] == 0) { // wenn zweites Feld frei -> schlagen
+                // schlagen...
+            } else { // Bauer bewegen
+
+            }
+        }
+    }
+
+    public void bewegeBauer() {
+        pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf neues Feld setzen
+        pgn[i_arr][j_arr] = 0;
+    }
+
+    public void setBauern() {
+        if (i_arr > newI) { // nach oben (weiß)
+            if (j_arr < newJ) { // nach rechts
+                checkObenSchlagen(1);
+            } else {
+                checkObenSchlagen(-1);
+            }
+        }
+        else { // nach unten (schwarz)
+            if (j_arr < newJ) { // nach rechts
+                checkUntenSchlagen(1);
+            } else { // nach links
+                checkUntenSchlagen(-1);
+            }
+        }
+    }
 
     // Bauer - Figur nach oben schlagen
     public boolean setSchlagOben() {
@@ -251,10 +376,23 @@ public class SpielLogik {
         }
     }
 
+    /*public void checkSchlagenBauer(int richtungVertikal, int richtungHorizontal) {
+        try {
+            if ( ((pgn[i_arr +richtungVertikal][j_arr + richtungHorizontal] == 1)) || (pgn[i_arr - 1][j_arr + richtung] == 2) ) { // oben links oder rechts
+                schlagenMitte_i = i_arr-1;
+                schlagenMitte_j = j_arr+richtung;
+                if ((pgn[i_arr - 2][j_arr + (richtung*2)] == 0)) { // ob geschlagen werden kann (zweites Feld frei)
+                    weiss_schlagen_i = i_arr - 2;
+                    weiss_schlagen_j = j_arr + (richtung*2);
+                }
+            }
+        } catch(Exception ignored) {}
+    }
+
     // Bauer schlagen prüfen
     public void checkObenSchlagen(int richtung) { // -1 = links; 1 = rechts
         try {
-            if ( ((pgn[i_arr - 1][j_arr + richtung] == 1)) || (pgn[i_arr - 1][j_arr + richtung] == 2) ) { // oben links oder rechts
+            if ( ((pgn[i_arr - 1][j_arr + richtung] == -1)) || (pgn[i_arr - 1][j_arr + richtung] == -2) ) { // oben links oder rechts
                 schlagenMitte_i = i_arr-1;
                 schlagenMitte_j = j_arr+richtung;
                 if ((pgn[i_arr - 2][j_arr + (richtung*2)] == 0)) { // ob geschlagen werden kann (zweites Feld frei)
@@ -268,7 +406,7 @@ public class SpielLogik {
     // Bauer schlagen prüfen
     public void checkUntenSchlagen(int richtung) { // 1 = rechts; -1 = links
         try {
-            if ((pgn[i_arr + 1][j_arr + richtung] > 2)) { // unten links
+            if ((pgn[i_arr + 1][j_arr + richtung] < 0)) { // unten links oder rechts
                 schlagenMitte_i = i_arr+1;
                 schlagenMitte_j = j_arr+richtung;
                 if ((pgn[i_arr + 2][j_arr + (richtung*2)] == 0)) {

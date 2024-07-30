@@ -129,10 +129,10 @@ public class SpielGUI extends Main {
             JMenuItem bDame = new JMenuItem("Schwarze Dame");
             JMenuItem spielStarten = new JMenuItem("Spiel starten");
 
-            wDame.addActionListener(e -> debugSetzeSpielfigur(4));
-            wBauer.addActionListener(e -> debugSetzeSpielfigur(3));
-            bDame.addActionListener(e -> debugSetzeSpielfigur(2));
-            bBauer.addActionListener(e -> debugSetzeSpielfigur(1));
+            wDame.addActionListener(e -> debugSetzeSpielfigur(2));
+            wBauer.addActionListener(e -> debugSetzeSpielfigur(1));
+            bDame.addActionListener(e -> debugSetzeSpielfigur(-2));
+            bBauer.addActionListener(e -> debugSetzeSpielfigur(-1));
             spielStarten.addActionListener(e -> debugStarten());
 
             wBauer.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
@@ -248,43 +248,49 @@ public class SpielGUI extends Main {
     public void setStandardPGN() {
         this.pgn = new int[][] {
           // a, b, c, d, e, f, g, h
+
+                // NEU
+                // -1 = Bauer schwarz
+                // -2 = Dame schwarz
+                // 1 = Bauer weiß
+                // 2 = Dame weiß
+                // 0 = leer
+
         // 1 = Bauer schwarz
         // 2 = Dame schwarz
         // 3 = Bauer weiß
         // 4 = Bauer schwarz
-        // 5 = feld ist Schlagbereit (markierung)
-        // 6 = Umrandung (noch einbauen?)
-            {0, 1, 0, 1, 0, 1, 0, 1},
-            {1, 0, 1, 0, 1, 0, 1, 0},
-            {0, 1, 0, 1, 0, 1, 0, 1},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {3, 0, 3, 0, 3, 0, 3, 0},
-            {0, 3, 0, 3, 0, 3, 0, 3},
-            {3, 0, 3, 0, 3, 0, 3, 0}};
+        {0, -1, 0, -1, 0, -1, 0, -1},
+        {-1, 0, -1, 0, -1, 0, -1, 0},
+        {0, -1, 0, -1, 0, -1, 0, -1},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {1, 0, 1, 0, 1, 0, 1, 0},
+        {0, 1, 0, 1, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1, 0, 1, 0}};
     }
 
     public void setSpielfigur(int i, int j) {
         switch (pgn[i][j]) {
-            case 1: // Bauer schwarz
+            case -1: // Bauer schwarz
                 SpFigZeichnen figur1 = new SpFigZeichnen("black");
                 play.add(figur1);
                 innerMiddleRow.add(feld[i][j]);
                 break;
 
-            case 2: // Dame schwarz
+            case -2: // Dame schwarz
                 DameZeichnen figur3 = new DameZeichnen("black");
                 play.add(figur3);
                 innerMiddleRow.add(feld[i][j]);
                 break;
 
-            case 3: // Bauer weiß
+            case 1: // Bauer weiß
                 SpFigZeichnen figur2 = new SpFigZeichnen("white");
                 play.add(figur2);
                 innerMiddleRow.add(feld[i][j]);
                 break;
 
-            case 4: // Dame weiß
+            case 2: // Dame weiß
                 DameZeichnen figur4 = new DameZeichnen("white");
                 play.add(figur4);
                 innerMiddleRow.add(feld[i][j]);
