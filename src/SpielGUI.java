@@ -1,20 +1,7 @@
 import javax.swing.*;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-
-// AKTUELLER PLAN:
-
-// Schwarz weiß schwarz weiß,...
-
-/*
-* Mögliche Züge zeichnen:
-* eventuell neue PGN für die Farben erstellen und da die farbe einfach färben?
-* */
-
-// JPanels mit Objekten füllen? -> für die
+import java.util.Arrays;
 
 import static java.lang.System.exit;
 
@@ -22,14 +9,9 @@ public class SpielGUI extends Main {
 
     private String modus;
     protected int[][] pgn=new int[8][8];
-    private JButton play;
+    private JButton spielfeldButtonListener;
     private JFrame fenster;
     private JPanel[][] feld;
-    private JMenuBar menueLeiste;
-    private JMenu dateiMenue;
-    private JMenuItem beenden;
-    private JMenuItem startseite;
-    private JMenuItem speichern;
     private int option;
     protected int[][] afterDebugPGN;
     private JPanel secondPanel;
@@ -37,9 +19,12 @@ public class SpielGUI extends Main {
     private JPanel innerMiddleRow;
     private JPanel innerThirdRow;
     private String zug_grid = "Weiß";
+    private JMenuBar menueLeiste;
+
 
     private SpielLogik logik;
     private DebugModus debug;
+    private SpielSpeichern speichern;
 
     protected boolean werIstDran = true; // true -> weiß; false -> schwarz
 
@@ -48,105 +33,62 @@ public class SpielGUI extends Main {
 
     public void setModus(String modus) {
         this.modus = modus;
-        starteGUI();
     }
 
     public void starteGUI() {
         this.fenster = Startbildschirm.fenster;
+
         logik = new SpielLogik();
         debug = new DebugModus();
+        speichern = new SpielSpeichern();
+
         this.afterDebugPGN = new int[8][8];
-
-        setMenueBar();
-
         fenster.setVisible(true);
     }
 
     public void setSpielfeld() {
+        setMenueBar();
         setGridLayout();
 
         feld = new JPanel[8][8];
 
-
         // Spielfeld (und Farben) erstellen
         for ( int i=0; i<8; i++ ) { // vertikal
             for ( int j=0; j<8; j++ ) { // horizontal
-
-                JPanel panel = new JPanel();
-
-                // GEHT SO!!!!
-                play = new JButton("");
-                setSpielfeldButton(i,j);
-
-                panel.add(play);
-
-                feld[i][j] = panel;
-                feld[i][j].setLayout(new GridLayout());
-                innerMiddleRow.add(feld[i][j]);
-
-                feld[i][j].setOpaque(true);
-                feld[i][j].setBackground(Color.GRAY);
-
-                if ((j+i) % 2 == 1) { // jedes zweite Feld färben
-                    feld[i][j].setBackground(Color.DARK_GRAY);
-                }
-
-                // Button unsichtbar machen
-                play.setBorderPainted(false);
-                play.setContentAreaFilled(false);
-                play.setFocusPainted(false);
-                play.setOpaque(false);
-
-                setSpielfigur(i, j);
+                setSpielfeldInhalte(i, j);
             }
         }
+
         checkModus();
     }
 
-    public void setMenueBar() {
-        // Menüleiste
-        menueLeiste = new JMenuBar();
-        dateiMenue = new JMenu("Datei");
-        speichern = new JMenuItem("Speichern\tstrg-s");
-        startseite = new JMenuItem("Startseite");
-        startseite.addActionListener(e -> setStartseite());
-        beenden = new JMenuItem("Beenden");
-        beenden.addActionListener(e -> exit(0));
-        dateiMenue.add(speichern);
-        dateiMenue.add(startseite);
-        dateiMenue.add(beenden);
-        menueLeiste.add(dateiMenue);
-        fenster.setJMenuBar(menueLeiste);
-    }
+    public void setSpielfeldInhalte(int i, int j) {
+        JPanel panel = new JPanel();
 
-    public void checkModus() {
-        // wenn Benutzer Debug-Modus angeklickt hat neuen Menüpunkt erstellen
-        if (modus.equals("debug")) {
-            JMenu debug = new JMenu("Debug");
-            JMenuItem wBauer = new JMenuItem("Weiße Spielfigur");
-            JMenuItem bBauer = new JMenuItem("Schwarze Spielfigur");
-            JMenuItem wDame = new JMenuItem("Weiße Dame");
-            JMenuItem bDame = new JMenuItem("Schwarze Dame");
-            JMenuItem spielStarten = new JMenuItem("Spiel starten");
+        spielfeldButtonListener = new JButton(""); // 'zentraler' Button für ActionListener
+        setSpielfeldButton(i,j);
 
-            wDame.addActionListener(e -> debugSetzeSpielfigur(2));
-            wBauer.addActionListener(e -> debugSetzeSpielfigur(1));
-            bDame.addActionListener(e -> debugSetzeSpielfigur(-2));
-            bBauer.addActionListener(e -> debugSetzeSpielfigur(-1));
-            spielStarten.addActionListener(e -> debugStarten());
+        panel.add(spielfeldButtonListener);
 
-            wBauer.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-            bBauer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            wDame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-            bDame.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        feld[i][j] = panel;
+        feld[i][j].setLayout(new GridLayout());
 
-            debug.add(wDame);
-            debug.add(wBauer);
-            debug.add(bDame);
-            debug.add(bBauer);
-            debug.add(spielStarten);
-            menueLeiste.add(debug);
+        feld[i][j].setOpaque(true);
+        feld[i][j].setBackground(Color.GRAY);
+
+        innerMiddleRow.add(feld[i][j]); // Spielfeld in die Mitte des Bildschirms setzen
+
+        if ((j+i) % 2 == 1) { // jedes zweite Feld färben
+            feld[i][j].setBackground(Color.DARK_GRAY);
         }
+
+        // Button unsichtbar machen
+        spielfeldButtonListener.setBorderPainted(false);
+        spielfeldButtonListener.setContentAreaFilled(false);
+        spielfeldButtonListener.setFocusPainted(false);
+        spielfeldButtonListener.setOpaque(false);
+
+        setSpielfigur(i, j);
     }
 
     public void setGridLayout() {
@@ -203,7 +145,97 @@ public class SpielGUI extends Main {
         innerGbc.gridx = 2;  // This should be 0
         innerGbc.gridy = 0;  // Change to 2 to place in the third row
         secondPanel.add(innerThirdRow, innerGbc);
+    }
 
+    public void setSpielfeldButton(int i, int j) {
+        if (modus.equals("spiel")) {
+            setSollGeschlagenWerden(i,j);
+        } else {
+            spielfeldButtonListener.addActionListener(e -> aktualisierePGN_debug(i, j));
+        }
+    }
+
+    public void setSpielfigur(int i, int j) {
+        switch (pgn[i][j]) {
+            case -1: // Bauer schwarz
+                SpFigZeichnen figur1 = new SpFigZeichnen("black");
+                spielfeldButtonListener.add(figur1);
+                innerMiddleRow.add(feld[i][j]);
+                break;
+
+            case -2: // Dame schwarz
+                DameZeichnen figur3 = new DameZeichnen("black");
+                spielfeldButtonListener.add(figur3);
+                innerMiddleRow.add(feld[i][j]);
+                break;
+
+            case 1: // Bauer weiß
+                SpFigZeichnen figur2 = new SpFigZeichnen("white");
+                spielfeldButtonListener.add(figur2);
+                innerMiddleRow.add(feld[i][j]);
+                break;
+
+            case 2: // Dame weiß
+                DameZeichnen figur4 = new DameZeichnen("white");
+                spielfeldButtonListener.add(figur4);
+                innerMiddleRow.add(feld[i][j]);
+                break;
+
+            case 6: // Rechteck
+                ZeichneRechteck figur5 = new ZeichneRechteck();
+                spielfeldButtonListener.add(figur5);
+                fenster.add(feld[i][j]);
+                break;
+
+            default:
+        }
+    }
+
+    public void checkModus() {
+        // wenn Benutzer Debug-Modus angeklickt hat, neuen Menüpunkt erstellen
+        if (modus.equals("debug")) {
+            JMenu debug = new JMenu("Debug");
+            JMenuItem wBauer = new JMenuItem("Weiße Spielfigur");
+            JMenuItem bBauer = new JMenuItem("Schwarze Spielfigur");
+            JMenuItem wDame = new JMenuItem("Weiße Dame");
+            JMenuItem bDame = new JMenuItem("Schwarze Dame");
+            JMenuItem spielStarten = new JMenuItem("Spiel starten");
+
+            wDame.addActionListener(e -> debugSetzeSpielfigur(2));
+            wBauer.addActionListener(e -> debugSetzeSpielfigur(1));
+            bDame.addActionListener(e -> debugSetzeSpielfigur(-2));
+            bBauer.addActionListener(e -> debugSetzeSpielfigur(-1));
+            spielStarten.addActionListener(e -> debugStarten());
+
+            wBauer.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            bBauer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            wDame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            bDame.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+            debug.add(wDame);
+            debug.add(wBauer);
+            debug.add(bDame);
+            debug.add(bBauer);
+            debug.add(spielStarten);
+            menueLeiste.add(debug);
+        }
+    }
+
+    public void setMenueBar() {
+        // Menüleiste
+        menueLeiste = new JMenuBar();
+        JMenu dateiMenue = new JMenu("Datei");
+        JMenuItem speichern_menuItem = new JMenuItem("Speichern\tstrg-s");
+        speichern_menuItem.addActionListener(e -> spielSpeichern());
+        JMenuItem startseite_menuItem = new JMenuItem("Startseite");
+        startseite_menuItem.addActionListener(e -> setStartseite());
+        JMenuItem beenden_menuItem = new JMenuItem("Beenden");
+        beenden_menuItem.addActionListener(e -> spielBeenden());
+        dateiMenue.add(speichern_menuItem);
+        dateiMenue.add(startseite_menuItem);
+        dateiMenue.add(beenden_menuItem);
+        menueLeiste.add(dateiMenue);
+        fenster.setJMenuBar(menueLeiste);
     }
 
     public void debugStarten() {
@@ -217,19 +249,11 @@ public class SpielGUI extends Main {
         fenster.repaint();
     }
 
-    public void setSpielfeldButton(int i, int j) {
-        if (modus.equals("spiel")) {
-            setSollGeschlagenWerden(i,j);
-        } else {
-            play.addActionListener(e -> aktualisierePGN_debug(i, j));
-        }
-    }
-
     public void setSollGeschlagenWerden(int i, int j) {
         if (pgn[i][j]==0) {
-            play.addActionListener(e -> schlageFigur(i, j));
+            spielfeldButtonListener.addActionListener(e -> schlageFigur(i, j));
         } else {
-            play.addActionListener(e -> logik.setAttributes(i, j, pgn));
+            spielfeldButtonListener.addActionListener(e -> logik.setAttributes(i, j, pgn));
         }
     }
 
@@ -245,21 +269,15 @@ public class SpielGUI extends Main {
         }
     }
 
+    // Standardaufstellung zum spielen
     public void setStandardPGN() {
         this.pgn = new int[][] {
           // a, b, c, d, e, f, g, h
-
-                // NEU
-                // -1 = Bauer schwarz
-                // -2 = Dame schwarz
-                // 1 = Bauer weiß
-                // 2 = Dame weiß
-                // 0 = leer
-
-        // 1 = Bauer schwarz
-        // 2 = Dame schwarz
-        // 3 = Bauer weiß
-        // 4 = Bauer schwarz
+            // -1 = Bauer schwarz
+            // -2 = Dame schwarz
+            // 1 = Bauer weiß
+            // 2 = Dame weiß
+            // 0 = leer
         {0, -1, 0, -1, 0, -1, 0, -1},
         {-1, 0, -1, 0, -1, 0, -1, 0},
         {0, -1, 0, -1, 0, -1, 0, -1},
@@ -270,42 +288,7 @@ public class SpielGUI extends Main {
         {1, 0, 1, 0, 1, 0, 1, 0}};
     }
 
-    public void setSpielfigur(int i, int j) {
-        switch (pgn[i][j]) {
-            case -1: // Bauer schwarz
-                SpFigZeichnen figur1 = new SpFigZeichnen("black");
-                play.add(figur1);
-                innerMiddleRow.add(feld[i][j]);
-                break;
-
-            case -2: // Dame schwarz
-                DameZeichnen figur3 = new DameZeichnen("black");
-                play.add(figur3);
-                innerMiddleRow.add(feld[i][j]);
-                break;
-
-            case 1: // Bauer weiß
-                SpFigZeichnen figur2 = new SpFigZeichnen("white");
-                play.add(figur2);
-                innerMiddleRow.add(feld[i][j]);
-                break;
-
-            case 2: // Dame weiß
-                DameZeichnen figur4 = new DameZeichnen("white");
-                play.add(figur4);
-                innerMiddleRow.add(feld[i][j]);
-                break;
-
-            case 6: // Rechteck
-                ZeichneRechteck figur5 = new ZeichneRechteck();
-                play.add(figur5);
-                fenster.add(feld[i][j]);
-                break;
-
-            default:
-        }
-    }
-
+    // Debug-Modus: neue Figuren anzeigen
     public void aktualisierePGN_debug(int i, int j) {
         // live anzeigen der neuen Steine
         afterDebugPGN[i][j] = debug.getDebugFigur();
@@ -317,6 +300,10 @@ public class SpielGUI extends Main {
         fenster.repaint();
     }
 
+    public void setGeladenePGN() {
+        this.pgn = speichern.getGeladenePGN();
+    }
+
     public void infoBox() {
         Object[] options = {"Fortfahren", "Abbrechen"};
 
@@ -326,19 +313,45 @@ public class SpielGUI extends Main {
 
     public void setStartseite() {
         // von Spielfeld zu Startseite -> Warnung
-        if (0 < 1) { // wenn nicht gespeichert
+        if (speichernAbfrage()) { // wenn ungleich
             infoBox();
-            if (option == JOptionPane.NO_OPTION) { // abbrechen
-                System.out.println("Zurück");
-            } else {
-                System.out.println("Nicht speichern");
-                fenster.getContentPane().removeAll();
-                fenster.setJMenuBar(null);
-                fenster.repaint();
-                Startbildschirm sb = new Startbildschirm();
-                sb.setStartbildschirm();
+            if (option == JOptionPane.YES_OPTION) { // abbrechen
+                clearSpielGUI();
             }
+        } else {
+            clearSpielGUI();
         }
+    }
+
+    public void clearSpielGUI() {
+        fenster.getContentPane().removeAll();
+        fenster.setJMenuBar(null);
+        fenster.repaint();
+        Startbildschirm sb = new Startbildschirm();
+        sb.setStartbildschirm();
+    }
+
+    public boolean speichernAbfrage() {
+        return !Arrays.deepEquals( // wenn gleich: true; else: false
+            speichern.getGeladenePGN(),
+            this.pgn
+        );
+    }
+
+    public void spielBeenden() {
+        if (speichernAbfrage()) { // wenn ungleich
+            infoBox(); // Warnung wenn spiel nicht gespeichert wurde
+            if (option == JOptionPane.YES_OPTION) { // abbrechen
+                exit(0);
+            }
+        } else {
+            exit(0);
+        }
+    }
+
+    public void spielSpeichern() {
+        speichern.setPGN(pgn);
+        speichern.speichereSpiel();
     }
 
     public void debugSetzeSpielfigur(int figur) {

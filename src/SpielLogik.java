@@ -12,11 +12,6 @@ public class SpielLogik {
     private int schlagenMitte_i;
     private int schlagenMitte_j;
 
-    private int weiss_schlagen_i;
-    private int weiss_schlagen_j;
-    private int black_schlagen_i;
-    private int black_schlagen_j;
-
     private int newI;
     private int newJ;
 
@@ -28,7 +23,6 @@ public class SpielLogik {
         this.j_arr = j;
         this.aktuelleFigur = pgn[i][j];
         this.pgn = pgn;
-        System.out.println("SET ATTRIBUTES");
     }
 
     public int[][] schlage(int newI, int newJ) { // wenn leeres Feld angeklickt wird
@@ -37,33 +31,13 @@ public class SpielLogik {
         this.newJ = newJ;
 
         switch(aktuelleFigur) {
-            case -1: // Bauer schwarz
-                /*checkUntenSchlagen(1); // links
-                if(setSchlagUnten()) break;
-                checkUntenSchlagen(-1);
-                if(setSchlagUnten()) break;
-
-                setBewegenUnten(1);
-                setBewegenUnten(-1);*/
-                checkSchlagen();
+            case 1:
+            case -1: // Bauern
+                checkBauerSchlagen();
                 break;
 
+            case 2:
             case -2: // Damen
-                bewegeDame();
-                break;
-
-            case 1: // Bauer weiß
-                checkSchlagen();
-                /*checkObenSchlagen(-1); // links
-                if(setSchlagOben()) break;
-                checkObenSchlagen(1);
-                if(setSchlagOben()) break;
-
-                setBewegenOben(-1);
-                setBewegenOben(1);*/
-                break;
-
-            case 2: // Damen
                 bewegeDame();
                 break;
 
@@ -215,7 +189,7 @@ public class SpielLogik {
 
 
 
-        public void checkSchlagen() {
+        public void checkBauerSchlagen() {
             if (i_arr > newI) { // nach oben (weiß)
                 if (j_arr < newJ) { // nach rechts
                     checkObenSchlagen(1);
@@ -267,6 +241,7 @@ public class SpielLogik {
                 pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf leeres Feld zeichnen
                 pgn[i_arr-1][j_arr+richtung] = 0; // geschlagene Figur entfernen
                 pgn[i_arr][j_arr] = 0; // alten Ort leeren
+                checkBauerZuDame();
             }
         }
 
@@ -277,12 +252,13 @@ public class SpielLogik {
                 pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf leeres Feld zeichnen
                 pgn[i_arr+1][j_arr+richtung] = 0; // geschlagene Figur entfernen
                 pgn[i_arr][j_arr] = 0; // alten Ort leeren
+                checkBauerZuDame();
             }
         }
 
         public void checkBauerBewegen(int richtungVertikal, int richtungHorizontal) {
             try {
-                // MAN KANN NOCH NACH UNTEN GEHEN MIT DEN BAUERN
+                // MAN KANN NOCH NACH UNTEN GEHEN MIT DEN BAUERN -> richtige i-Ebene verursacht den Fehler
                 // Feld frei, richtige i-Ebene, richtige j-Ebene
                 if ((pgn[i_arr+richtungVertikal][j_arr+richtungHorizontal] == 0) && (Math.abs(newI - i_arr) == 1)
                         && ((j_arr+richtungHorizontal) == newJ)) {
@@ -294,9 +270,19 @@ public class SpielLogik {
         public void bauerBewegenOben() {
             pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf neues Feld setzen
             pgn[i_arr][j_arr] = 0; // altes Feld der Figur leeren
+            checkBauerZuDame();
         }
 
-
+        // wird nur aufgerufen wenn man mit einem Bauer auch schlagen / bewegen kann
+        public void checkBauerZuDame() {
+            if (newI == 0 || newI == 7) {
+                if (aktuelleFigur == -1) { // aktuelle Figur: schwarzer Bauer
+                    pgn[newI][newJ] = -2;
+                } else {
+                    pgn[newI][newJ] = 2;
+                }
+            }
+        }
 
 
 

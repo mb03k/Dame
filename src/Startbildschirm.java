@@ -6,6 +6,7 @@ import static java.lang.System.exit;
 public class Startbildschirm {
 
     static protected JFrame fenster = new Fenster();
+    private SpielGUI gui = new SpielGUI();
 
     public Startbildschirm() {
 
@@ -15,7 +16,7 @@ public class Startbildschirm {
         // Design für Hauptbildschirm
         fenster.setLayout(new GridBagLayout());
 
-        JPanel elmementPanel = new JPanel(new GridBagLayout());
+        JPanel elementPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 0.0;
@@ -26,49 +27,63 @@ public class Startbildschirm {
         dame.setForeground(Color.LIGHT_GRAY);
 
         JButton debug = new JButton("Debug-Modus");
-        JButton spiel = new JButton("Spielen");
+        JButton spiel = new JButton("Neues Spiel");
+        JButton spiel_laden = new JButton("Spiel laden");
         JButton schliessen = new JButton("Beenden");
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        elmementPanel.add(dame, gbc);
+        elementPanel.add(dame, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        elmementPanel.add(debug, gbc);
+        elementPanel.add(debug, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 2;
-        elmementPanel.add(spiel, gbc);
+        elementPanel.add(spiel, gbc);
 
         gbc.gridx = 2;
         gbc.gridy = 2;
-        elmementPanel.add(schliessen, gbc);
+        elementPanel.add(schliessen, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        elementPanel.add(spiel_laden, gbc);
 
         spiel.addActionListener(e -> starteSpiel());
+        spiel_laden.addActionListener( e -> starteGeladenesSpiel());
         debug.addActionListener(e -> starteDebug());
         schliessen.addActionListener(e -> exit(0));
 
-        elmementPanel.setBackground(Color.BLACK);
-        fenster.add(elmementPanel);
+        elementPanel.setBackground(Color.BLACK);
+        fenster.add(elementPanel);
         fenster.setVisible(true);
     }
 
     public void starteDebug() {
-        // Startbildschirm entfernen
         fenster.getContentPane().removeAll();
-        SpielGUI gui = new SpielGUI();
         gui.setModus("debug");
+        gui.starteGUI();
         gui.setSpielfeld();
         fenster.repaint();
     }
 
     public void starteSpiel() {
-        // Startbildschirm entfernen
         fenster.getContentPane().removeAll();
-        SpielGUI gui = new SpielGUI();
         gui.setModus("spiel");
+        gui.starteGUI();
         gui.setStandardPGN();
+        gui.setSpielfeld();
+        fenster.repaint();
+    }
+
+    // WAS WENN NICHTS GESPEICHERT WURDE?
+    public void starteGeladenesSpiel() {
+        fenster.getContentPane().removeAll();
+        gui.setModus("spiel");
+        gui.starteGUI();
+        gui.setGeladenePGN(); // aus SpielSpeichern die alte PGN als Standard setzen
         gui.setSpielfeld();
         fenster.repaint();
     }
