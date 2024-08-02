@@ -12,8 +12,22 @@ public class SpielLogik {
     private int schlagenMitte_i;
     private int schlagenMitte_j;
 
+    private int richtung;
+
     private int newI;
     private int newJ;
+
+
+
+    // ---------
+
+    int j_temp;
+    int besetzteFelder;
+    int i_schlagenMitte;
+    int j_schlagenMitte;
+
+    // ---------
+
 
     public SpielLogik() {
     }
@@ -78,6 +92,25 @@ public class SpielLogik {
         }
     }
 
+    // in welche Richtung geschlagen werden soll
+    public boolean setzeDame() {
+        if (i_arr > newI) { // nach oben (weiß)
+            if (j_arr < newJ) { // nach rechts
+                this.richtung = 1;
+            } else {
+                this.richtung = -1;
+            }
+            return dameSchlagenOben();
+        } else { // nach unten (schwarz)
+            if (j_arr < newJ) { // nach rechts
+                this.richtung = 1;
+            } else { // nach links
+                this.richtung = -1;
+            }
+            return dameSchlagenUnten();
+        }
+    }
+
     public boolean checkDamenDiagonale() {
         // wenn neues Feld auf der selben Diagonale liegt
         if ( ( Math.abs(i_arr - newI) == Math.abs(j_arr - newJ))) {
@@ -90,39 +123,33 @@ public class SpielLogik {
         }
     }
 
-    // in welche Richtung geschlagen werden soll
-    public boolean setzeDame() {
-        if (i_arr > newI) { // nach oben (weiß)
-            if (j_arr < newJ) { // nach rechts
-                return dameSchlagenOben(1);
-            } else {
-                return dameSchlagenOben(-1);
-            }
+    public boolean pruefeSelbeFarbe(int i) {
+        if (pgn[i][j_temp] < 0) { // ein Feld auf der Diagonalen (schwarze Figur)
+            return aktuelleFigur < 0; // schwarz schlägt schwarz
         }
-        else { // nach unten (schwarz)
-            if (j_arr < newJ) { // nach rechts
-                return dameSchlagenUnten(1);
-            } else { // nach links
-                return dameSchlagenUnten(-1);
-            }
+        else if (pgn[i][j_temp] > 0) { // ein Feld auf der Diagonalen (weiße Figur)
+            return aktuelleFigur > 0; // weiß schlägt weiß
         }
+
+        return false;
     }
 
     // schlägt den Stein
-    public boolean dameSchlagenOben(int richtung) { // richtung: -1 = oben links; 1 = oben rechts
-        int j_temp = (j_arr + richtung);
-        int besetzteFelder = 0;
-        int i_schlagenMitte = -1;
-        int j_schlagenMitte = -1;
+    public boolean dameSchlagenOben() { // richtung: -1 = oben links; 1 = oben rechts
+        j_temp = (j_arr + richtung);
+        besetzteFelder = 0;
+        i_schlagenMitte = -1;
+        j_schlagenMitte = -1;
 
         // läuft die Diagonale nach oben ab und schaut welche Felder besetzt sind
-        // prüft NICHT ob auf dem Feld ein Stein liegt
         for (int i = (i_arr-1); i > newI; i--) {
-            System.out.println("check: "+i + "-"+j_temp +" --- " + pgn[i][j_temp]);
+
             if (pgn[i][j_temp] != 0) { // wenn Feld besetzt ist
+                if (pruefeSelbeFarbe(i)) {
+                    return true;
+                }
                 besetzteFelder++;
             }
-            System.out.println("Besetzte Felder:" +besetzteFelder);
 
             // wenn man schlagen kann indizes vom geschlagenen Stein setzen
             if ((pgn[i][j_temp] != 0) && (besetzteFelder == 1) ) {
@@ -140,20 +167,34 @@ public class SpielLogik {
         } else return besetzteFelder > 1; // true wenn man nicht zeichnen soll
     }
 
-    public boolean dameSchlagenUnten(int richtung) { // richtung: -1 = unten links; 1 = unten rechts
-        int j_temp = (j_arr + richtung);
-        int besetzteFelder = 0;
-        int i_schlagenMitte = -1;
-        int j_schlagenMitte = -1;
+    private int figurenWeissTest = 0;
+    private int figurenSchwarzTest = 0;
+
+    public void setFiguren(int i, int j_temp) {
+        if (pgn[i][j_temp] < 0) { // schwarze Figur
+
+        }
+        else if (pgn[i][j_temp] > 0) { // weiße Figur
+
+        }
+    }
+
+    public boolean dameSchlagenUnten() { // richtung: -1 = unten links; 1 = unten rechts
+        j_temp = (j_arr + richtung);
+        besetzteFelder = 0;
+        i_schlagenMitte = -1;
+        j_schlagenMitte = -1;
 
         // läuft die Diagonale nach unten ab und schaut welche Felder besetzt sind
         // prüft NICHT ob auf dem neuen Feld ein Stein liegt
         for (int i = (i_arr+1); i < newI; i++) {
-            //for (int i = newI; i < i_arr>; i-) {
             if (pgn[i][j_temp] != 0) { // wenn Feld besetzt ist
                 besetzteFelder++;
+                if (pruefeSelbeFarbe(i)) {
+                    return true;
+                }
             }
-            System.out.println("check schwarz: "+i + "-"+j_temp +" --- " + pgn[i][j_temp]);
+
 
             // wenn man schlagen kann indizes vom geschlagenen Stein setzen
             if ((pgn[i][j_temp] != 0) && (besetzteFelder == 1) ) {
@@ -261,10 +302,26 @@ public class SpielLogik {
                 // MAN KANN NOCH NACH UNTEN GEHEN MIT DEN BAUERN -> richtige i-Ebene verursacht den Fehler
                 // Feld frei, richtige i-Ebene, richtige j-Ebene
                 if ((pgn[i_arr+richtungVertikal][j_arr+richtungHorizontal] == 0) && (Math.abs(newI - i_arr) == 1)
-                        && ((j_arr+richtungHorizontal) == newJ)) {
+                        && ((j_arr+richtungHorizontal) == newJ) && pruefeRichtigeBauerRichtung()) {
                     bauerBewegenOben();
                 }
             } catch (Exception ignored) {}
+        }
+
+        public boolean pruefeRichtigeBauerRichtung() {
+            if ((istSchwarzeFigur()) && (neuesFeldUnterUrsprung())) { // schwarze Figur will nach oben
+                return true;
+            }
+
+            return (!istSchwarzeFigur()) && (!neuesFeldUnterUrsprung());
+        }
+
+        public boolean istSchwarzeFigur() {
+            return aktuelleFigur < 0;
+        }
+
+        public boolean neuesFeldUnterUrsprung() {
+            return newI > i_arr;
         }
 
         public void bauerBewegenOben() {
