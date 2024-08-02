@@ -1,5 +1,3 @@
-import javax.swing.*;
-import java.sql.SQLOutput;
 
 public class SpielLogik {
 
@@ -17,17 +15,10 @@ public class SpielLogik {
     private int newI;
     private int newJ;
 
-
-
-    // ---------
-
     int j_temp;
     int besetzteFelder;
     int i_schlagenMitte;
     int j_schlagenMitte;
-
-    // ---------
-
 
     public SpielLogik() {
     }
@@ -60,21 +51,6 @@ public class SpielLogik {
 
         return pgn;
     }
-
-    // prüfe ob mehr als ein Stein liegt
-
-    /*
-
-    Fälle:
-    i < newI: nach unten
-        j_arr < newJ nach unten rechts
-        j_arr > newJ nach unten links
-
-    i > newI: nach oben
-        j_arr < newJ nach oben rechts
-        j_arr > newJ nach oben links
-
-*/
 
     // ---------------------------------------------------------------------------------------------------
     // Damen:
