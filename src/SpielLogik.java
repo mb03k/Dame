@@ -82,13 +82,10 @@ public class SpielLogik {
     public void bewegeDame() {
         if (!setzeDame()) { // Figur wurde von Dame NICHT geschlagen
             // Dame bewegen (zeichnen)
-            if (pgn[newI][newJ] == 0 && checkDamenDiagonale()) { // wenn neues Feld leer ist
+            if (pgn[newI][newJ] == 0 && dameLiegtAufDerSelbenDiagonale()) { // wenn neues Feld leer ist
                 pgn[newI][newJ] = pgn[i_arr][j_arr]; // Dame auf leeres Feld zeichnen
                 pgn[i_arr][j_arr] = 0; // alten Ort leeren
-                System.out.println("Dame auf neues Feld bewegen");
             }
-        } else {
-            System.out.println("Dame macht goar nix");
         }
     }
 
@@ -111,16 +108,9 @@ public class SpielLogik {
         }
     }
 
-    public boolean checkDamenDiagonale() {
+    public boolean dameLiegtAufDerSelbenDiagonale() {
         // wenn neues Feld auf der selben Diagonale liegt
-        if ( ( Math.abs(i_arr - newI) == Math.abs(j_arr - newJ))) {
-            System.out.println("FREI");
-            return true;
-        }
-        else {
-            System.out.println("Ne, wird nichts an: "+newI+"-"+newJ);
-            return false;
-        }
+        return Math.abs(i_arr - newI) == Math.abs(j_arr - newJ);
     }
 
     public boolean pruefeSelbeFarbe(int i) {
@@ -167,18 +157,6 @@ public class SpielLogik {
         } else return besetzteFelder > 1; // true wenn man nicht zeichnen soll
     }
 
-    private int figurenWeissTest = 0;
-    private int figurenSchwarzTest = 0;
-
-    public void setFiguren(int i, int j_temp) {
-        if (pgn[i][j_temp] < 0) { // schwarze Figur
-
-        }
-        else if (pgn[i][j_temp] > 0) { // weiße Figur
-
-        }
-    }
-
     public boolean dameSchlagenUnten() { // richtung: -1 = unten links; 1 = unten rechts
         j_temp = (j_arr + richtung);
         besetzteFelder = 0;
@@ -209,12 +187,6 @@ public class SpielLogik {
             schlagenDame(i_schlagenMitte, j_schlagenMitte, richtung, 1);
             return true;
         } else return besetzteFelder > 1; // true wenn man nicht zeichnen soll
-
-
-        /*if (besetzteFelder < 2) {
-            System.out.println("DU KANNST SPRINGEN (SCHWARZ)!!!!" + richtung);
-            return true; // du kannst springen
-        }*/
     }
 
     // wenn Dame eine Figur schlägt alles zeichnen
