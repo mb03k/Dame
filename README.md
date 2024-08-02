@@ -16,12 +16,13 @@ Falls erfolgt, funktioniert es bei mir mit den Befehlen:
    Per 'git status' aktuellen Status einsehen, 'git branch' aktuelle Repository (?)
 
 To-Dos:
-- einfach ALLES nochmal überarbeiten -> sauberer und verständlicher gestalten
-- Spielfeld beschriftung hinzufügen (1-8 und a-h)
-- Spieler nur abwechselnd bewegen lassen (weiß, schwarz, weiß,...)
-- Prüfen ob Spiel zu ende ist
-- "Endscreen" - wenn jemand gewonnen hat
-- "erworbene" Figuren anzeigen - Weiß hat x Steine und y Damen geschlagen, Schwarz hat ...
-- Spielspeicherung?
-- Bauer können nach unten und oben platziert werden (in 'checkBauerBewegen()')
+- [ ] einfach ALLES nochmal überarbeiten -> sauberer und verständlicher gestalten
+- [ ] Spielfeld beschriftung hinzufügen (1-8 und a-h)
+- [ ] Spieler nur abwechselnd bewegen lassen (weiß, schwarz, weiß,...)
+- [ ] Prüfen ob Spiel zu ende ist
+- [ ] "Endscreen" - wenn jemand gewonnen hat
+- [ ] "erworbene" Figuren anzeigen - Weiß hat x Steine und y Damen geschlagen, Schwarz hat
+- [X] Spielspeicherung
+- [X] Bauer können nach unten und oben platziert werden (in 'checkBauerBewegen()')
+- [X] Damen können die eigene Farbe schlagen
 ...
