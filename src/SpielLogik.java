@@ -30,7 +30,7 @@ public class SpielLogik {
         this.pgn = pgn;
     }
 
-    public int[][] schlage(int newI, int newJ) { // wenn leeres Feld angeklickt wird
+    public int[][] schlageOderBewege(int newI, int newJ) { // wenn leeres Feld angeklickt wird
 
         this.newI = newI;
         this.newJ = newJ;
@@ -223,10 +223,11 @@ public class SpielLogik {
             } catch (Exception ignored) {}
         }
 
+        // KANN MAN ZUSAMMENFASSEN
+
         public void bauerSchlagenOben(int richtung) {
-            // wenn neues Feld auf der richtigen i-Ebene liegt
+            // wenn neues Feld auf der richtigen i- und j-Ebene liegt
             if ((Math.abs(newI - i_arr) == 2) && (Math.abs(newJ - j_arr)) == 2) {
-                System.out.println("bauerSchlagenOben()");
                 pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf leeres Feld zeichnen
                 pgn[i_arr-1][j_arr+richtung] = 0; // geschlagene Figur entfernen
                 pgn[i_arr][j_arr] = 0; // alten Ort leeren
@@ -235,9 +236,8 @@ public class SpielLogik {
         }
 
         public void bauerSchlagenUnten(int richtung) {
-            // wenn neues Feld auf der richtigen i-Ebene liegt
+            // wenn neues Feld auf der richtigen i- und j-Ebene liegt
             if (Math.abs(newI - i_arr) == 2 && (Math.abs(newJ - j_arr)) == 2) {
-                System.out.println("bauerSchlagenUnten()");
                 pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf leeres Feld zeichnen
                 pgn[i_arr+1][j_arr+richtung] = 0; // geschlagene Figur entfernen
                 pgn[i_arr][j_arr] = 0; // alten Ort leeren
@@ -247,20 +247,28 @@ public class SpielLogik {
 
         public void checkBauerBewegen(int richtungVertikal, int richtungHorizontal) {
             try {
-                // MAN KANN NOCH NACH UNTEN GEHEN MIT DEN BAUERN -> richtige i-Ebene verursacht den Fehler
-                // Feld frei, richtige i-Ebene, richtige j-Ebene
-                if ((pgn[i_arr+richtungVertikal][j_arr+richtungHorizontal] == 0) && (Math.abs(newI - i_arr) == 1)
-                        && ((j_arr+richtungHorizontal) == newJ) && pruefeRichtigeBauerRichtung()) {
-                    bauerBewegenOben();
-                }
+                bewegeBauer(richtungVertikal, richtungHorizontal);
             } catch (Exception ignored) {}
+        }
+
+        public void bewegeBauer(int richtungVertikal, int richtungHorizontal) throws Exception {
+            // Feld frei, richtige i-Ebene, richtige j-Ebene
+            if ((pgn[i_arr+richtungVertikal][j_arr+richtungHorizontal]==0) && (Math.abs(newI-i_arr)==1)
+                    && ((j_arr+richtungHorizontal)==newJ) && pruefeRichtigeBauerRichtung()) {
+                bauerBewegen();
+            }
+        }
+
+        public void bauerBewegen() {
+            pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf neues Feld setzen
+            pgn[i_arr][j_arr] = 0; // altes Feld der Figur leeren
+            checkBauerZuDame();
         }
 
         public boolean pruefeRichtigeBauerRichtung() {
             if ((istSchwarzeFigur()) && (neuesFeldUnterUrsprung())) { // schwarze Figur will nach oben
                 return true;
             }
-
             return (!istSchwarzeFigur()) && (!neuesFeldUnterUrsprung());
         }
 
@@ -270,12 +278,6 @@ public class SpielLogik {
 
         public boolean neuesFeldUnterUrsprung() {
             return newI > i_arr;
-        }
-
-        public void bauerBewegenOben() {
-            pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf neues Feld setzen
-            pgn[i_arr][j_arr] = 0; // altes Feld der Figur leeren
-            checkBauerZuDame();
         }
 
         // wird nur aufgerufen wenn man mit einem Bauer auch schlagen / bewegen kann
