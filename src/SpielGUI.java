@@ -57,7 +57,7 @@ public class SpielGUI extends Main {
         }
 
         checkModus();
-    } //VTWATS
+    } 
 
     public void setSpielfeldInhalte(int i, int j) {
         JPanel panel = new JPanel();
