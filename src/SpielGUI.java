@@ -14,10 +14,7 @@ public class SpielGUI extends Main {
     private JPanel[][] feld;
     private int option;
     protected int[][] afterDebugPGN;
-    private JPanel secondPanel;
-    private JPanel innerFirstRow;
     private JPanel innerMiddleRow;
-    private JPanel innerThirdRow;
     private String zug_grid = "Weiß";
     private JMenuBar menueLeiste;
 
@@ -111,7 +108,7 @@ public class SpielGUI extends Main {
         fenster.add(firstPanel, gbc);
 
         // Second panel with three rows
-        secondPanel = new JPanel(new GridBagLayout());
+        JPanel secondPanel = new JPanel(new GridBagLayout());
         gbc.weighty = 0.8; // 80% of the height
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -124,7 +121,7 @@ public class SpielGUI extends Main {
         innerGbc.weighty = 1.0;
 
         // First inner row
-        innerFirstRow = new JPanel();
+        JPanel innerFirstRow = new JPanel();
         innerFirstRow.setBackground(Color.DARK_GRAY);
         innerGbc.gridx = 0;
         innerGbc.gridy = 0;  // This should remain 0
@@ -140,7 +137,7 @@ public class SpielGUI extends Main {
         secondPanel.add(innerMiddleRow, innerGbc);
 
         // Third inner row
-        innerThirdRow = new JPanel();
+        JPanel innerThirdRow = new JPanel();
         innerThirdRow.setBackground(Color.DARK_GRAY);
         innerGbc.gridx = 2;  // This should be 0
         innerGbc.gridy = 0;  // Change to 2 to place in the third row
@@ -258,7 +255,7 @@ public class SpielGUI extends Main {
     }
 
     public void schlageFigur(int i, int j) {
-        int[][] temp = logik.schlage(i, j);
+        int[][] temp = logik.schlageOderBewege(i, j);
         if (temp != null) {
             pgn = temp;
             fenster.getContentPane().removeAll();
