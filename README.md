@@ -25,4 +25,5 @@ To-Dos:
 - [X] Spielspeicherung
 - [X] Bauer können nach unten und oben platziert werden (in 'checkBauerBewegen()')
 - [X] Damen können die eigene Farbe schlagen
+- [ ] Debug-Modus: wenn man einen Bauern auf ein Feld setzt in dem es zur Dame werden sollte und man das Spiel startet, bleibt es ein Bauer
 ...
