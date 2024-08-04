@@ -23,7 +23,7 @@ public class SpielGUI extends Main {
     private DebugModus debug;
     private SpielSpeichern speichern;
 
-    protected boolean werIstDran = true; // true -> weiß; false -> schwarz
+    protected String werIstDran = "w"; // w -> weiß; s -> schwarz
 
     public SpielGUI() {
     }
@@ -256,6 +256,7 @@ public class SpielGUI extends Main {
 
     public void schlageFigur(int i, int j) {
         int[][] temp = logik.schlageOderBewege(i, j);
+        //logik.setAktuellerSpieler();
         if (temp != null) {
             pgn = temp;
             fenster.getContentPane().removeAll();
