@@ -70,6 +70,13 @@ public class SpielLogik {
         return pgn;
     }
 
+    public String getWerIstDran() {
+        if (this.werIstDran.equals("w")) {
+            return "Weiß";
+        } else {
+            return "Schwarz";
+        }
+    }
 
     // ---------------------------------------------------------------------------------------------------
     // Damen:
@@ -114,7 +121,6 @@ public class SpielLogik {
         } else if (pgn[i][j_temp] > 0) { // ein Feld auf der Diagonalen (weiße Figur)
             return aktuelleFigur > 0; // weiß schlägt weiß
         }
-
         return false;
     }
 
@@ -188,7 +194,6 @@ public class SpielLogik {
         pgn[i_arr][j_arr] = 0; // alten Ort leeren
         pgn[i_schlagenMitte][j_schlagenMitte] = 0; // geschlagene Figur entfernen
         werIstDran = aendereAktuellenSpieler();
-        System.out.println("HALLO: schlagenDame()");
         //checkSpielende();
     }
 
@@ -256,7 +261,6 @@ public class SpielLogik {
         pgn[i_arr + richtungVertikal][j_arr + richtungHorizontal] = 0; // geschlagene Figur entfernen
         pgn[i_arr][j_arr] = 0; // alten Ort leeren
         werIstDran = aendereAktuellenSpieler();
-        System.out.println("HALLO: bauerSchlagenZeichnen()");
         checkBauerZuDame();
         //checkSpielende();
     }
@@ -275,7 +279,6 @@ public class SpielLogik {
         pgn[newI][newJ] = pgn[i_arr][j_arr]; // Figur auf neues Feld setzen
         pgn[i_arr][j_arr] = 0; // altes Feld der Figur leeren
         werIstDran = aendereAktuellenSpieler();
-        System.out.println("HALLO: bauerBewegen()");
         checkBauerZuDame();
         //checkSpielende();
     }
@@ -310,7 +313,6 @@ public class SpielLogik {
         if (werIstDran.equals("w")) { // weiß hat gespielt, jetzt schwarz
             return "s";
         }
-        System.out.println("aendereAktuellenSpieler()");
         return "w";
     }
 }

@@ -23,7 +23,6 @@ public class SpielGUI extends Main {
     private DebugModus debug;
     private SpielSpeichern speichern;
 
-    protected String werIstDran = "w"; // w -> weiß; s -> schwarz
 
     public SpielGUI() {
     }
@@ -255,10 +254,11 @@ public class SpielGUI extends Main {
     }
 
     public void schlageFigur(int i, int j) {
-        int[][] temp = logik.schlageOderBewege(i, j);
+        int[][] setzePGN = logik.schlageOderBewege(i, j);
         //logik.setAktuellerSpieler();
-        if (temp != null) {
-            pgn = temp;
+        if (setzePGN != null) {
+            this.zug_grid = logik.getWerIstDran();
+            pgn = setzePGN;
             fenster.getContentPane().removeAll();
             fenster.setJMenuBar(null);
             setMenueBar();
