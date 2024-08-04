@@ -18,7 +18,7 @@ Falls erfolgt, funktioniert es bei mir mit den Befehlen:
 To-Dos:
 - [ ] einfach ALLES nochmal überarbeiten -> sauberer und verständlicher gestalten
 - [ ] Spielfeld beschriftung hinzufügen (1-8 und a-h)
-- [ ] Spieler nur abwechselnd bewegen lassen (weiß, schwarz, weiß,...)
+- [X] Spieler nur abwechselnd bewegen lassen (weiß, schwarz, weiß,...)
 - [ ] Prüfen ob Spiel zu ende ist
 - [ ] "Endscreen" - wenn jemand gewonnen hat
 - [ ] "erworbene" Figuren anzeigen - Weiß hat x Steine und y Damen geschlagen, Schwarz hat
