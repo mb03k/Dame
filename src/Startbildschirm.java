@@ -83,7 +83,7 @@ public class Startbildschirm {
         fenster.getContentPane().removeAll();
         gui.setModus("spiel");
         gui.starteGUI();
-        gui.setGeladenePGN(); // aus SpielSpeichern die alte PGN als Standard setzen
+        gui.setGespeichertePGN(); // aus SpielSpeichern die alte PGN als Standard setzen
         gui.setSpielfeld();
         fenster.repaint();
     }

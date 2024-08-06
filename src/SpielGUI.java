@@ -18,11 +18,9 @@ public class SpielGUI extends Main {
     private String zug_grid = "Weiß";
     private JMenuBar menueLeiste;
 
-
     private SpielLogik logik;
     private DebugModus debug;
     private SpielSpeichern speichern;
-
 
     public SpielGUI() {
     }
@@ -195,12 +193,14 @@ public class SpielGUI extends Main {
             JMenuItem bBauer = new JMenuItem("Schwarze Spielfigur");
             JMenuItem wDame = new JMenuItem("Weiße Dame");
             JMenuItem bDame = new JMenuItem("Schwarze Dame");
+            JMenuItem loeschen = new JMenuItem("Figur löschen");
             JMenuItem spielStarten = new JMenuItem("Spiel starten");
 
             wDame.addActionListener(e -> debugSetzeSpielfigur(2));
             wBauer.addActionListener(e -> debugSetzeSpielfigur(1));
             bDame.addActionListener(e -> debugSetzeSpielfigur(-2));
             bBauer.addActionListener(e -> debugSetzeSpielfigur(-1));
+            loeschen.addActionListener(e -> debugSetzeSpielfigur(0));
             spielStarten.addActionListener(e -> debugStarten());
 
             wBauer.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
@@ -212,6 +212,7 @@ public class SpielGUI extends Main {
             debug.add(wBauer);
             debug.add(bDame);
             debug.add(bBauer);
+            debug.add(loeschen);
             debug.add(spielStarten);
             menueLeiste.add(debug);
         }
@@ -255,7 +256,6 @@ public class SpielGUI extends Main {
 
     public void schlageFigur(int i, int j) {
         int[][] setzePGN = logik.schlageOderBewege(i, j);
-        //logik.setAktuellerSpieler();
         if (setzePGN != null) {
             this.zug_grid = logik.getWerIstDran();
             pgn = setzePGN;
@@ -290,23 +290,23 @@ public class SpielGUI extends Main {
     public void aktualisierePGN_debug(int i, int j) {
         // live anzeigen der neuen Steine
         afterDebugPGN[i][j] = debug.getDebugFigur();
+        pgn[i][j] = debug.getDebugFigur();
         fenster.getContentPane().removeAll();
         fenster.setJMenuBar(null);
         setMenueBar();
-        pgn[i][j] = debug.getDebugFigur();
         setSpielfeld();
         fenster.repaint();
     }
 
-    public void setGeladenePGN() {
+    public void setGespeichertePGN() {
         this.pgn = speichern.getGeladenePGN();
     }
 
     public void infoBox() {
-        Object[] options = {"Fortfahren", "Abbrechen"};
+        Object[] optionen = {"Fortfahren", "Abbrechen"};
 
         option = JOptionPane.showOptionDialog(null, "Das Spiel wird nicht gespeichert. Fortfahren?", "Spielspeicherung",
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, optionen, optionen[0]);
     }
 
     public void setStartseite() {
