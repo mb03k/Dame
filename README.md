@@ -28,4 +28,7 @@ To-Dos:
 - [X] Damen können die eigene Farbe schlagen
 - [ ] Debug-Modus: wenn man einen Bauern auf ein Feld setzt in dem es zur Dame werden sollte und man das Spiel startet, bleibt es ein Bauer
 - [ ] Figuren nur noch auf dunkle Felder setzen lassen (evtl. wie beim Dijkstra-Alg. einen 2D-Array mit 'Kanten' erzeugen und vergleichen)
+- [ ] Bug: falls ein Bauer übersprungen wird um zum Spielfeldrand zu kommen, wird man keine Dame sondern bleibt ein Bauer
+- [ ] Felder auf die man springen kann werden farbig hervorgehoben
+- [ ] Auf Windows sieht das Spielfeld ebenfalls gut aus
 ...
