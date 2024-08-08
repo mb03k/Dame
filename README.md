@@ -30,5 +30,6 @@ To-Dos:
 - [ ] Figuren nur noch auf dunkle Felder setzen lassen (evtl. wie beim Dijkstra-Alg. einen 2D-Array mit 'Kanten' erzeugen und vergleichen)
 - [ ] Bug: falls ein Bauer übersprungen wird um zum Spielfeldrand zu kommen, wird man keine Dame sondern bleibt ein Bauer
 - [ ] Felder auf die man springen kann werden farbig hervorgehoben
-- [ ] Auf Windows sieht das Spielfeld ebenfalls gut aus
+- [ ] Auf Windows Spielfeld schön machen
+- [ ] Mehrfachsprünge implementieren
 ...
