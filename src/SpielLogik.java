@@ -22,7 +22,7 @@ public class SpielLogik {
 
     private String werIstDran = "w"; // w -> weiß ; s -> schwarz
 
-    SpielLogikEnde ende = new SpielLogikEnde();
+    //SpielLogikEnde ende = new SpielLogikEnde();
 
     public SpielLogik() {
     }
@@ -40,6 +40,12 @@ public class SpielLogik {
         this.newX = newX;
 
         if (pgn != null && neuesFeldLiegtAufDiagonale() && spielerIstDranUndRichtigeFigur()) {
+            setFigurSchlagenIndizes();
+
+            // if (zugzwang) {
+            //      schlagenPrüfenUndSo();
+            // }
+
             setzeFiguren();
             return pgn;
         }
@@ -48,10 +54,10 @@ public class SpielLogik {
     }
 
     public boolean spielerIstDranUndRichtigeFigur() {
-        if (werIstDran.equals("w") && pgn[y_arr][x_arr] > 0) {
+        if (werIstDran.equals("w") && !istSchwarzeFigur()) {
             return true;
         }
-        else return werIstDran.equals("s") && pgn[y_arr][x_arr] < 0;
+        else return werIstDran.equals("s") && istSchwarzeFigur();
     }
 
     public boolean neuesFeldLiegtAufDiagonale() {
@@ -76,7 +82,7 @@ public class SpielLogik {
 
     // zentrale Auswahl
     public void waehleBauerAktion() {
-        setFigurSchlagenIndizes();
+        //setFigurSchlagenIndizes();
 
         if (moechteBauerBewegen() && bewegtInRichtigeRichtung()) {
             figurBewegenZeichnen();
@@ -89,7 +95,7 @@ public class SpielLogik {
     }
 
     public boolean bewegtInRichtigeRichtung() {
-        if ((istSchwarzeFigur()) && (neuesFeldUnterUrsprung())) { // schwarze Figur will nach oben
+        if (istSchwarzeFigur() && neuesFeldUnterUrsprung()) { // schwarze Figur will nach oben
             return true;
         }
         return (!istSchwarzeFigur()) && (!neuesFeldUnterUrsprung());
@@ -112,12 +118,17 @@ public class SpielLogik {
     }
 
     public boolean bauerSchlagenMitteBesetzt() {
-        if (istSchwarzeFigur() && (bauerSchlagenMittleresFeld > 0) && (neuesFeldUnterUrsprung())) {
-            return true;
-        }
-        else {
-            return !istSchwarzeFigur() && (bauerSchlagenMittleresFeld < 0) && !neuesFeldUnterUrsprung();
-        }
+        try {
+            setBauerSchlagenMittleresFeld();
+            if (istSchwarzeFigur() && (bauerSchlagenMittleresFeld > 0) && (neuesFeldUnterUrsprung())) {
+                return true;
+            }
+            else {
+                return !istSchwarzeFigur() && (bauerSchlagenMittleresFeld < 0) && !neuesFeldUnterUrsprung();
+            }
+        } catch (Exception ignored) {}
+
+        return false;
     }
 
     public boolean istSchwarzeFigur() {
@@ -136,6 +147,9 @@ public class SpielLogik {
         } else {
             this.richtungHorizontal = -1;
         }
+    }
+
+    public void setBauerSchlagenMittleresFeld() throws Exception {
         bauerSchlagenMittleresFeld = pgn[y_arr+richtungVertikal][x_arr+richtungHorizontal];
     }
 
@@ -168,9 +182,9 @@ public class SpielLogik {
         y_arr = newY;
         x_arr = newX;
 
-        werIstDran = aendereAktuellenSpieler(); // fliegt noch raus
+        //werIstDran = aendereAktuellenSpieler(); // fliegt noch raus
         checkBauerZuDame();
-        //checkZugzwang();
+        checkZugzwang();
     }
 
     // -----------------------------------------------------------------
@@ -302,34 +316,54 @@ public class SpielLogik {
     // ---------------------------------------------------------
     // Zugzwang
 
+    private boolean zugzwang;
 
-    // GIBT DIE RICHTIGEN ERGEBNISSE!!!!!
     public void checkZugzwang() {
-        if (aktuelleFigur == -1 || aktuelleFigur == 1) {
-            newY = (y_arr + (richtungVertikal*2));
-            newX = (x_arr + 2);
-            setFigurSchlagenIndizes();
-            checkZugzwangBauer();
+        System.out.println("CHECKZUGZWANG()");
+        zugzwang = false;
+
+        if ((aktuelleFigur == -1 || aktuelleFigur == 1)) { // ob bauer
+            newY = (y_arr + (richtungVertikal * 2)); // nach oben / unten
+            newX = (x_arr + 2); // nach links / rechts
+            System.out.println("Figur ist bauer");
+
+            // rechts schlagen
+            if (!checkOutOfBounds()) {
+                if (moechteBauerSchlagen() && bauerSchlagenMitteBesetzt() && !neuesFeldIstBesetzt()) { // bauer kann rechts schlagen
+                    setFigurSchlagenIndizes();
+                    System.out.println("Rechts schlagbar: " + newY + "-" + newX);
+                    zugzwang = true;
+                }
+            }
 
             newX = (x_arr - 2);
-            setFigurSchlagenIndizes();
-            checkZugzwangBauer();
-        } else {
-            checkZugzwangDame();
+            if (!checkOutOfBounds()) {
+                // links schlagen
+                if (moechteBauerSchlagen() && bauerSchlagenMitteBesetzt() && !neuesFeldIstBesetzt()) {
+                    setFigurSchlagenIndizes();
+                    System.out.println("links schlagbar: " + newY + "-" + newX);
+                    zugzwang = true;
+                }
+
+                System.out.println("---");
+            }
+
+            spielerAendern();
         }
     }
 
-    public boolean checkZugzwangBauer() {
-        if (bauerSchlagenMitteBesetzt() && pgn[newY][newX]==0) {
-            System.out.println("KANNST NOCHMAL SCHLAGEN");
-            return true;
+    public void spielerAendern() {
+        if (!zugzwang) {
+            werIstDran = aendereAktuellenSpieler();
         }
-        System.out.println("");
-        return false;
     }
 
-    public boolean checkZugzwangDame() {
-        return false;
+    public boolean neuesFeldIstBesetzt() {
+        return pgn[newY][newX] != 0;
+    }
+
+    public boolean checkOutOfBounds() {
+        return (newY < 0 || newY > 7 || newX < 0 || newX > 7);
     }
 
 
