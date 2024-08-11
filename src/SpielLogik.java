@@ -234,6 +234,7 @@ public class SpielLogik {
 
         if (besetzteFelder == 1) {
             this.newX = (geschlagenerSteinX + richtungHorizontal);
+            this.newY = (geschlagenerSteinY + richtungVertikal);
             return true;
         }
 
@@ -256,6 +257,7 @@ public class SpielLogik {
 
         if (besetzteFelder == 1) {
             this.newX = (geschlagenerSteinX + richtungHorizontal);
+            this.newY = (geschlagenerSteinY + richtungVertikal);
             return true;
         }
 
@@ -325,7 +327,6 @@ public class SpielLogik {
         if ((aktuelleFigur == -1 || aktuelleFigur == 1)) { // ob bauer
             newY = (y_arr + (richtungVertikal * 2)); // nach oben / unten
             newX = (x_arr + 2); // nach links / rechts
-            System.out.println("Figur ist bauer");
 
             // rechts schlagen
             if (!checkOutOfBounds()) {
@@ -350,6 +351,33 @@ public class SpielLogik {
 
             spielerAendern();
         }
+
+        else{ // ob bauer
+            newY = (y_arr + (richtungVertikal * 2)); // nach oben / unten
+            newX = (x_arr + 2); // nach links / rechts
+
+            // rechts schlagen
+            if (!checkOutOfBounds()) {
+                if (dameRichtungSchlagenPruefen()) { // bauer kann rechts schlagen
+                    System.out.println("Rechts schlagbar: " + newY + "-" + newX);
+                    zugzwang = true;
+                }
+            }
+
+            newX = (x_arr - 2);
+            if (!checkOutOfBounds()) {
+                // links schlagen
+                if (dameRichtungSchlagenPruefen()) {
+                    System.out.println("links schlagbar: " + newY + "-" + newX);
+                    zugzwang = true;
+                }
+
+                System.out.println("---");
+            }
+
+            spielerAendern();
+        }
+
     }
 
     public void spielerAendern() {
