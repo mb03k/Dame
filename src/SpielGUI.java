@@ -87,58 +87,85 @@ public class SpielGUI extends Main {
 
     public void setGridLayout() {
         GridBagConstraints gbc = new GridBagConstraints();
-
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
-        gbc.insets = new Insets(0,0,0,0);
+        gbc.insets = new Insets(0, 0, 10, 0);
 
-        // Panel for the first line
+        // Panel for the first line (e.g., showing the player's turn)
         JPanel firstPanel = new JPanel();
-        JLabel label = new JLabel("Zug von: "+zug_grid);
+        JLabel label = new JLabel("Zug von: " + zug_grid);
         label.setForeground(Color.WHITE);
         label.setFont(new Font("Arial", Font.BOLD, 20));
-
         firstPanel.add(label);
         firstPanel.setBackground(Color.DARK_GRAY);
+
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridwidth = 3; // Span across all columns
+        gbc.weightx = 1.0;
+        gbc.weighty = 0.01;
         fenster.add(firstPanel, gbc);
 
-        // Second panel with three rows
-        JPanel secondPanel = new JPanel(new GridBagLayout());
-        gbc.weighty = 0.8; // 80% of the height
-        gbc.gridx = 0;
+        // Panel for the column labels (A-H)
+        JPanel schriftPanel = new JPanel(new GridLayout(1, 8));
+        schriftPanel.setBackground(Color.DARK_GRAY);
+        gbc.gridwidth = 1; // Reset gridwidth
+        gbc.gridx = 1; // Position the panel correctly
         gbc.gridy = 1;
-        fenster.add(secondPanel, gbc);
+        gbc.weightx = 0.8;
+        gbc.weighty = 0.05;
+        fenster.add(schriftPanel, gbc);
 
-        // Constraints for the inner rows of the second panel
-        GridBagConstraints innerGbc = new GridBagConstraints();
-        innerGbc.fill = GridBagConstraints.BOTH;
-        innerGbc.weightx = 1.0;
-        innerGbc.weighty = 1.0;
+        for (int col = 0; col < 8; col++) {
+            JLabel alabel = new JLabel(String.valueOf((char) ('A' + col)), SwingConstants.CENTER);
+            alabel.setForeground(Color.WHITE);
+            alabel.setFont(new Font("Arial", Font.BOLD, 20));
+            schriftPanel.add(alabel);
+        }
 
-        // First inner row
-        JPanel innerFirstRow = new JPanel();
-        innerFirstRow.setBackground(Color.DARK_GRAY);
-        innerGbc.gridx = 0;
-        innerGbc.gridy = 0;  // This should remain 0
-        secondPanel.add(innerFirstRow, innerGbc);
+        // Panel for the row labels (1-8)
+        JPanel nummernPanel = new JPanel(new GridLayout(8, 1));
+        nummernPanel.setBackground(Color.DARK_GRAY);
+        gbc.gridx = 0; // Position it in the left margin
+        gbc.gridy = 2;
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.8;
+        fenster.add(nummernPanel, gbc);
 
-        // Middle inner row
+        for (int row = 1; row <= 8; row++) {
+            JLabel nummernLabel = new JLabel(String.valueOf(row), SwingConstants.CENTER);
+            nummernLabel.setForeground(Color.WHITE);
+            nummernLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            nummernLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, -10)); // Set right padding
+            nummernPanel.add(nummernLabel);
+        }
+
+        // Middle inner row - the main game grid
         innerMiddleRow = new JPanel();
         innerMiddleRow.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        innerMiddleRow.setLayout(new GridLayout(8,8));
+        innerMiddleRow.setLayout(new GridLayout(8, 8));
         innerMiddleRow.setBackground(Color.DARK_GRAY);
-        innerGbc.gridx = 1;  // This should be 0
-        innerGbc.gridy = 0;  // Change to 1 to place in the second row
-        secondPanel.add(innerMiddleRow, innerGbc);
+        gbc.gridx = 1; // Position it in the center
+        gbc.gridy = 2;
+        gbc.weightx = 0.8;
+        gbc.weighty = 0.8;
+        fenster.add(innerMiddleRow, gbc);
 
-        // Third inner row
-        JPanel innerThirdRow = new JPanel();
-        innerThirdRow.setBackground(Color.DARK_GRAY);
-        innerGbc.gridx = 2;  // This should be 0
-        innerGbc.gridy = 0;  // Change to 2 to place in the third row
-        secondPanel.add(innerThirdRow, innerGbc);
+        // Filler panels to create margins on left and right
+        JPanel leftMargin = new JPanel();
+        leftMargin.setBackground(Color.DARK_GRAY);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.8;
+        fenster.add(leftMargin, gbc);
+
+        JPanel rightMargin = new JPanel();
+        rightMargin.setBackground(Color.DARK_GRAY);
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.8;
+        fenster.add(rightMargin, gbc);
     }
 
     public void setSpielfeldButton(int i, int j) {
