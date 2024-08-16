@@ -32,4 +32,6 @@ To-Dos:
 - [ ] Felder auf die man springen kann werden farbig hervorgehoben
 - [ ] Auf Windows Spielfeld schön machen
 - [ ] Mehrfachsprünge implementieren
+- [ ] Spielspeicherung bugfix: wenn man spiel lädt und ändert wird nicht nochmal gefragt ob man speichern will
+- [ ] (noch nicht überprüft, aber) was wenn noch kein spiel gespeichert wurde?
 ...
