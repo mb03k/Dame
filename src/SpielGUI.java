@@ -14,7 +14,7 @@ public class SpielGUI extends Main {
     private JPanel[][] feld;
     private int option;
     protected int[][] afterDebugPGN;
-    private JPanel innerMiddleRow;
+    private JPanel checkerboard;
     private String zug_grid = "Weiß";
     private JMenuBar menueLeiste;
 
@@ -70,7 +70,7 @@ public class SpielGUI extends Main {
         feld[i][j].setOpaque(true);
         feld[i][j].setBackground(Color.GRAY);
 
-        innerMiddleRow.add(feld[i][j]); // Spielfeld in die Mitte des Bildschirms setzen
+        checkerboard.add(feld[i][j]); // Spielfeld in die Mitte des Bildschirms setzen
 
         if ((j+i) % 2 == 1) { // jedes zweite Feld färben
             feld[i][j].setBackground(Color.DARK_GRAY);
@@ -90,42 +90,42 @@ public class SpielGUI extends Main {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 10, 0);
 
-        // Panel for the first line (e.g., showing the player's turn)
-        JPanel firstPanel = new JPanel();
-        JLabel label = new JLabel("Zug von: " + zug_grid);
-        label.setForeground(Color.WHITE);
-        label.setFont(new Font("Arial", Font.BOLD, 20));
-        firstPanel.add(label);
-        firstPanel.setBackground(Color.DARK_GRAY);
+        
+        JPanel zugPanel = new JPanel();
+        JLabel zugLabel = new JLabel("Zug von: " + zug_grid);
+        zugLabel.setForeground(Color.WHITE);
+        zugLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        zugPanel.add(zugLabel);
+        zugPanel.setBackground(Color.DARK_GRAY);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 3; // Span across all columns
+        gbc.gridwidth = 3; // komplette Breite
         gbc.weightx = 1.0;
         gbc.weighty = 0.01;
-        fenster.add(firstPanel, gbc);
+        fenster.add(zugPanel, gbc);
 
-        // Panel for the column labels (A-H)
-        JPanel schriftPanel = new JPanel(new GridLayout(1, 8));
-        schriftPanel.setBackground(Color.DARK_GRAY);
-        gbc.gridwidth = 1; // Reset gridwidth
-        gbc.gridx = 1; // Position the panel correctly
+        // Panel fuer labels (A-H)
+        JPanel letterPanel = new JPanel(new GridLayout(1, 8));
+        letterPanel.setBackground(Color.DARK_GRAY);
+        gbc.gridwidth = 1; 
+        gbc.gridx = 1; 
         gbc.gridy = 1;
         gbc.weightx = 0.8;
         gbc.weighty = 0.05;
-        fenster.add(schriftPanel, gbc);
+        fenster.add(letterPanel, gbc);
 
         for (int col = 0; col < 8; col++) {
-            JLabel alabel = new JLabel(String.valueOf((char) ('A' + col)), SwingConstants.CENTER);
-            alabel.setForeground(Color.WHITE);
-            alabel.setFont(new Font("Arial", Font.BOLD, 20));
-            schriftPanel.add(alabel);
+            JLabel letterLabel = new JLabel(String.valueOf((char) ('A' + col)), SwingConstants.CENTER);
+            letterLabel.setForeground(Color.WHITE);
+            letterLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            letterPanel.add(letterLabel);
         }
 
-        // Panel for the row labels (1-8)
+        // Panel fuer labels (1-8)
         JPanel nummernPanel = new JPanel(new GridLayout(8, 1));
         nummernPanel.setBackground(Color.DARK_GRAY);
-        gbc.gridx = 0; // Position it in the left margin
+        gbc.gridx = 0; // 
         gbc.gridy = 2;
         gbc.weightx = 0.1;
         gbc.weighty = 0.8;
@@ -135,37 +135,37 @@ public class SpielGUI extends Main {
             JLabel nummernLabel = new JLabel(String.valueOf(row), SwingConstants.CENTER);
             nummernLabel.setForeground(Color.WHITE);
             nummernLabel.setFont(new Font("Arial", Font.BOLD, 20));
-            nummernLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, -10)); // Set right padding
+            nummernLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); // Abstand Rand
             nummernPanel.add(nummernLabel);
         }
 
-        // Middle inner row - the main game grid
-        innerMiddleRow = new JPanel();
-        innerMiddleRow.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        innerMiddleRow.setLayout(new GridLayout(8, 8));
-        innerMiddleRow.setBackground(Color.DARK_GRAY);
-        gbc.gridx = 1; // Position it in the center
+        // Spielfeld
+        checkerboard = new JPanel();
+        checkerboard.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        checkerboard.setLayout(new GridLayout(8, 8));
+        checkerboard.setBackground(Color.DARK_GRAY);
+        gbc.gridx = 1; 
         gbc.gridy = 2;
-        gbc.weightx = 0.8;
-        gbc.weighty = 0.8;
-        fenster.add(innerMiddleRow, gbc);
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        fenster.add(checkerboard, gbc);
 
-        // Filler panels to create margins on left and right
-        JPanel leftMargin = new JPanel();
-        leftMargin.setBackground(Color.DARK_GRAY);
+        // Raender erstellen
+        JPanel linksRand = new JPanel();
+        linksRand.setBackground(Color.DARK_GRAY);
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 0.1;
         gbc.weighty = 0.8;
-        fenster.add(leftMargin, gbc);
+        fenster.add(linksRand, gbc);
 
-        JPanel rightMargin = new JPanel();
-        rightMargin.setBackground(Color.DARK_GRAY);
+        JPanel rechtsRand = new JPanel();
+        rechtsRand.setBackground(Color.DARK_GRAY);
         gbc.gridx = 2;
         gbc.gridy = 2;
         gbc.weightx = 0.1;
         gbc.weighty = 0.8;
-        fenster.add(rightMargin, gbc);
+        fenster.add(rechtsRand, gbc);
     }
 
     public void setSpielfeldButton(int i, int j) {
@@ -181,25 +181,25 @@ public class SpielGUI extends Main {
             case -1: // Bauer schwarz
                 SpFigZeichnen figur1 = new SpFigZeichnen("black");
                 spielfeldButtonListener.add(figur1);
-                innerMiddleRow.add(feld[i][j]);
+                checkerboard.add(feld[i][j]);
                 break;
 
             case -2: // Dame schwarz
                 DameZeichnen figur3 = new DameZeichnen("black");
                 spielfeldButtonListener.add(figur3);
-                innerMiddleRow.add(feld[i][j]);
+                checkerboard.add(feld[i][j]);
                 break;
 
             case 1: // Bauer weiß
                 SpFigZeichnen figur2 = new SpFigZeichnen("white");
                 spielfeldButtonListener.add(figur2);
-                innerMiddleRow.add(feld[i][j]);
+                checkerboard.add(feld[i][j]);
                 break;
 
             case 2: // Dame weiß
                 DameZeichnen figur4 = new DameZeichnen("white");
                 spielfeldButtonListener.add(figur4);
-                innerMiddleRow.add(feld[i][j]);
+                checkerboard.add(feld[i][j]);
                 break;
 
             case 6: // Rechteck
