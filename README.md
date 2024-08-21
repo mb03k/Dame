@@ -18,7 +18,7 @@ Falls erfolgt, funktioniert es bei mir mit den Befehlen:
 To-Dos:
 - [ ] einfach ALLES nochmal überarbeiten -> sauberer und verständlicher gestalten
 - [ ] auf Bugs untersuchen (und bestenfalls hier aufschreiben)
-- [ ] Spielfeld beschriftung hinzufügen (1-8 und a-h)
+- [x] Spielfeld beschriftung hinzufügen (1-8 und a-h)
 - [X] Spieler nur abwechselnd bewegen lassen (weiß, schwarz, weiß,...)
 - [ ] Prüfen ob Spiel zu ende ist
 - [ ] "Endscreen" - wenn jemand gewonnen hat
