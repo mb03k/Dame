@@ -103,6 +103,7 @@ public class SpielLogik {
 
     private boolean zugIstMoeglich() {
         boolean moeglich = false;
+        boolean schlagIstmoeglich = false;
         this.bewegungspfadIndex = 0;
         for (int[] moeglichesZiel: this.aktuellerStein.getBewegungsziele()) {
             if (Arrays.equals(moeglichesZiel, this.zielpunkt)) {
@@ -110,6 +111,14 @@ public class SpielLogik {
                 break;
             }
             this.bewegungspfadIndex++;
+        }
+        for (int[] moeglichesZiel: this.aktuellerStein.getBewegungsziele()) {
+            if (abs(moeglichesZiel[0] - this.y_arr) > 1) {
+                schlagIstmoeglich = true;
+            }
+        }
+        if (schlagIstmoeglich && abs(this.zielpunkt[0] - this.y_arr) < 2) {
+            moeglich = false;
         }
         return moeglich;
     }
