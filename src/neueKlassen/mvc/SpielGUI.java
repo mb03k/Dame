@@ -313,7 +313,7 @@ public class SpielGUI extends Main {
     }
 
     private void aktualisiereSteinPGN(int[][] pgn) {
-        SpielData.erstelleSteinpgn(pgn);
+        SpielData.erstelleSteinpgn(pgn); //hier könnte man verbessern, indem man nicht jedes Mal alle Objekte neu erstellt, sondern nur relevante abändert
         this.steinpgn = SpielData.getSteinpgn();
     }
 
@@ -354,6 +354,9 @@ public class SpielGUI extends Main {
 
     public void setGespeichertePGN() {
         this.pgn = speichern.getGeladenePGN();
+        SpielData.setAktuellepgn(this.pgn);
+        SpielData.erstelleSteinpgn(this.pgn);
+        this.steinpgn = SpielData.steinpgn;
     }
 
     public void infoBox() {
@@ -412,10 +415,10 @@ public class SpielGUI extends Main {
 
     public void setPGN(int[][] pgn) {
         this.pgn = pgn;
+        SpielData.setAktuellepgn(this.pgn);
+        SpielData.erstelleSteinpgn(this.pgn);
+        this.steinpgn = SpielData.steinpgn;
     }
-
-
-
 
     public static void markiereZieleFarbig(java.util.List<int[]> bewegungsziele) {
         for ( int i=0; i<8; i++ ) {
