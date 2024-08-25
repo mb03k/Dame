@@ -2,7 +2,6 @@ package neueKlassen.mvc;
 
 import neueKlassen.Spielstein;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,25 +15,12 @@ public class SpielLogik {
     private int x_arr;
     private Spielstein[][] steinpgn;
 
-    private int aktuelleFigur;
     private Spielstein aktuellerStein;
-
-    private int richtungHorizontal;
-    private int richtungVertikal;
 
     private int newY;
     private int newX;
     private int[] zielpunkt;
     private List<Integer> zielpunktListe;
-    private int bewegungspfadIndex;
-
-    private int geschlagenerSteinY;
-    private int geschlagenerSteinX;
-
-    private int bauerSchlagenMittleresFeld;
-
-    private int x_temp;
-    private int besetzteFelder;
 
     private int zugFarbe = 1; // 1 -> weiß ; -1 -> schwarz
 
@@ -48,7 +34,6 @@ public class SpielLogik {
         this.steinpgn = steinpgn;
         this.y_arr = y;
         this.x_arr = x;
-        this.aktuelleFigur = pgn[y][x];
         this.aktuellerStein = steinpgn[y][x];
     }
 
@@ -64,7 +49,7 @@ public class SpielLogik {
             return pgn;
         }
 
-        return null; //noch return pgn einfügen, damit das neue pgn zurückgegeben wird
+        return null;
     }
 
     private boolean testeZugzwang() {
@@ -117,10 +102,12 @@ public class SpielLogik {
                 zuEntfernendeSteine.add(entfernendeFigur);
                 posX += schritt[1] / abs(schritt[1]);
                 posY += schritt[0] / abs(schritt[0]);
-                //als nächstes Prüfen, warum eine dame spielsteine wegnehmen kann und ein Bauer nicht mehr.. hier irgendwo fehler
             }
         }
-        //aktualisiere pgn
+        aktualisierePGN(zuEntfernendeSteine);
+    }
+
+    private void aktualisierePGN(List<int[]> zuEntfernendeSteine) {
         for (int[] stein: zuEntfernendeSteine) {
             this.pgn[stein[0]][stein[1]] = 0;
         }
@@ -136,7 +123,6 @@ public class SpielLogik {
         this.pgn[y_arr][x_arr] = 0;
 
         this.zugFarbe = aendereAktuellenSpieler();
-        //Als nächstes muss ein Bauer zur Dame werden, wenn er auf hinterster Linie
     }
 
     private boolean bewegungspfadIstEnthalten(List<int[]> bewegungspfad, List<List<int[]>> bewegungspfadeSchlagen) {
@@ -162,14 +148,14 @@ public class SpielLogik {
         return true;
     }
 
-    
+
     public int aendereAktuellenSpieler() {
         if (this.zugFarbe == 1) { // weiß hat gespielt, jetzt schwarz
             return -1;
         }
         return 1;
     }
-    
+
     public String getWerIstDran() {
         if (this.zugFarbe == 1) {
             return "Weiß";
@@ -177,24 +163,19 @@ public class SpielLogik {
             return "Schwarz";
         }
     }
-    
+
     public void aktiviereFeld(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
         System.out.println("Klick! " + i + " , " + j);
         aktiviereSpielstein(i, j, steinpgn, pgn);
-
     }
 
     private void aktiviereSpielstein(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
         List<int[]> bewegungsziele = steinpgn[i][j].getBewegungsziele();
         markiereZieleFarbig(bewegungsziele);
         setAttributes(i, j, pgn, steinpgn);
-        if (bewegungsziele.size() == 0) {
-            return;
-        }
     }
 
     private void markiereZieleFarbig(List<int[]> bewegungsziele) {
         SpielGUI.markiereZieleFarbig(bewegungsziele);
     }
 }
-
