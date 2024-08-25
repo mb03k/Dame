@@ -35,7 +35,6 @@ public class SpielData {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 waehleSpielstein(i, j, zahlenpgn);
-
             }
         }
     }
@@ -52,10 +51,10 @@ public class SpielData {
                 steinpgn[i][j] = new Bauer(i, j, -1); //schwarz
                 break;
             case 2:
-                steinpgn[i][j] = new Dame();
+                steinpgn[i][j] = new Dame(i, j, 1);
                 break;
             case -2:
-                steinpgn[i][j] = new Dame();
+                steinpgn[i][j] = new Dame(i, j, -1);
                 break;
             default:
                 System.out.println("Unbekannter Spielstein fehler");
@@ -66,6 +65,9 @@ public class SpielData {
         return steinpgn;
     }
 
-
+    public static void setAktuellepgn(int[][] aktuellepgn) {
+        SpielData.aktuellepgn = aktuellepgn;
+    }
 
 }
+
