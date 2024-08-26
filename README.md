@@ -33,5 +33,7 @@ To-Dos:
 - [ ] Auf Windows Spielfeld schön machen
 - [ ] Mehrfachsprünge implementieren
 - [ ] Spielspeicherung bugfix: wenn man spiel lädt und ändert wird nicht nochmal gefragt ob man speichern will
-- [ ] (noch nicht überprüft, aber) was wenn noch kein spiel gespeichert wurde?
+- [X] (noch nicht überprüft, aber) was wenn noch kein spiel gespeichert wurde? -> leeres Feld wird angezeigt
+- [ ] neues Spiel, figuren bewegen, speichern und zur Startseite gehen. Wenn man auf neues spiel klickt, wird das gespeicherte Spiel geladen
+      -> aber nicht, wenn man das Programm neu startet
 ...
