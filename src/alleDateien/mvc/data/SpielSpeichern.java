@@ -31,8 +31,6 @@ public class SpielSpeichern {
             BufferedWriter writer = new BufferedWriter(file);
             writer.write(builder.toString());
             writer.close();
-
-            System.out.println("Spiel wurde gespeichert!");
         } catch (IOException ignored) {}
     }
 

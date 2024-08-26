@@ -6,7 +6,7 @@ import alleDateien.Leerfeld;
 import alleDateien.Spielstein;
 
 public class SpielData {
-    public static int[][] standardpgn = new int[][] {
+    public final static int[][] standardpgn = new int[][] {
         // a, b, c, d, e, f, g, h
         // -1 = Bauer schwarz
         // -2 = Dame schwarz
@@ -67,5 +67,9 @@ public class SpielData {
 
     public static void setAktuellepgn(int[][] aktuellepgn) {
         SpielData.aktuellepgn = aktuellepgn;
+    }
+
+    public static int[][] getStandardpgn() {
+        return standardpgn;
     }
 }

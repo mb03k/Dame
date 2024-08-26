@@ -50,13 +50,9 @@ public class SpielGUI extends Main {
 
         this.afterDebugPGN = new int[8][8];
         fenster.setVisible(true);
-        System.out.println("starteGUI gekonnt ignoriert");
     }
 
     public void setSpielfeld() {
-
-        starteGUI();
-
         setMenueBar();
         setGridLayout();
 
@@ -65,6 +61,14 @@ public class SpielGUI extends Main {
             for ( int j=0; j<8; j++ ) { // horizontal
                 setSpielfeldInhalte(i, j);
             }
+        }
+
+        System.out.println("Aktuelle pgn: - setSpielfeld");
+        for (int i=0; i<8;i++) {
+            for (int j=0; j<8; j++) {
+                System.out.print(pgn[i][j]+"|");
+            }
+            System.out.println();
         }
 
         checkModus();
@@ -292,13 +296,10 @@ public class SpielGUI extends Main {
     }
 
     public void setSollGeschlagenWerden(int i, int j) {
-
-
         if (pgn[i][j]==0) {
             spielfeldButtonListener.addActionListener(e -> schlageFigur(i, j));
         } else {
             spielfeldButtonListener.addActionListener(e -> logik.aktiviereFeld(i, j, steinpgn, pgn));
-//            spielfeldButtonListener.addActionListener(e -> logik.setAttributes(i, j, pgn));
         }
     }
 
@@ -334,8 +335,8 @@ public class SpielGUI extends Main {
     }
 
     public void setStandardPGN() {
-        this.pgn = SpielData.standardpgn;
-        this.steinpgn = SpielData.steinpgn;
+        this.pgn = SpielData.getStandardpgn();
+        this.steinpgn = SpielData.getSteinpgn();
     }
 
     public void setGespeichertePGN() {
@@ -353,15 +354,39 @@ public class SpielGUI extends Main {
     }
 
     public void setStartseite() {
-        // von Spielfeld zu Startseite -> Warnung
-        if (speichernAbfrage()) { // wenn ungleich
+        if (spielIstGespeichert()) { // wenn PGN's ungleich
+            System.out.println("JA - ich möchte speichern - setStartseite");
             infoBox();
             if (option == JOptionPane.YES_OPTION) { // abbrechen
+                System.out.println("Startseite!!! - setStartseite");
                 clearSpielGUI();
             }
         } else {
+            System.out.println("KEINE speichernAbfrage() - setStartseite");
             clearSpielGUI();
         }
+    }
+
+    public void spielBeenden() {
+        System.out.println("hallo?");
+        if (spielIstGespeichert()) { // wenn PGN's ungleich
+            System.out.println("JA - ich möchte speichern - spielBeenden");
+            infoBox(); // Warnung wenn spiel nicht gespeichert wurde
+            if (option == JOptionPane.YES_OPTION) {
+                System.out.println("BEENDEN!!! - spielBeenden");
+                exit(0);
+            }
+        } else {
+            System.out.println("KEINE speichernAbfrage() - spielBeenden");
+            exit(0);
+        }
+    }
+
+    public boolean spielIstGespeichert() {
+        return !Arrays.deepEquals( // wenn gleich: true; else: false
+                speichern.getGeladenePGN(),
+                this.pgn
+        );
     }
 
     public void clearSpielGUI() {
@@ -370,24 +395,6 @@ public class SpielGUI extends Main {
         fenster.repaint();
         Startbildschirm sb = new Startbildschirm();
         sb.setStartbildschirm();
-    }
-
-    public boolean speichernAbfrage() {
-        return !Arrays.deepEquals( // wenn gleich: true; else: false
-                speichern.getGeladenePGN(),
-                this.pgn
-        );
-    }
-
-    public void spielBeenden() {
-        if (speichernAbfrage()) { // wenn ungleich
-            infoBox(); // Warnung wenn spiel nicht gespeichert wurde
-            if (option == JOptionPane.YES_OPTION) { // abbrechen
-                exit(0);
-            }
-        } else {
-            exit(0);
-        }
     }
 
     public void spielSpeichern() {
@@ -407,14 +414,14 @@ public class SpielGUI extends Main {
     }
 
     public static void markiereZieleFarbig(java.util.List<int[]> bewegungsziele) {
-        for ( int i=0; i<8; i++ ) {
+        for ( int i=0; i<8; i++ ) { // Felder standard färben (schwarz-weiss)
             for ( int j=0; j<8; j++ ) {
                 faerbeHintergrund(i, j);
             }
         }
-        for (int[] bewegungsziel: bewegungsziele) {
+
+        for (int[] bewegungsziel: bewegungsziele) { // Mögliche Züge färben
             feld[bewegungsziel[0]][bewegungsziel[1]].setBackground(Color.ORANGE);
         }
-
     }
 }

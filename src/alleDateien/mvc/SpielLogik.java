@@ -52,6 +52,21 @@ public class SpielLogik {
         return null;
     }
 
+    private boolean zugIstMoeglich() {
+        boolean moeglich = false;
+        for (int[] moeglichesZiel : this.aktuellerStein.getBewegungsziele()) {
+            if (Arrays.equals(moeglichesZiel, this.zielpunkt)) {
+                moeglich = true;
+                break;
+            }
+        }
+        return moeglich;
+    }
+
+    private boolean richtigeFarbe() {
+        return this.zugFarbe == this.aktuellerStein.getFarbe();
+    }
+
     private boolean testeZugzwang() {
         List<Spielstein> steineUnterZugzwang = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
@@ -70,21 +85,6 @@ public class SpielLogik {
             steineUnterZugzwang.add(steinpgn[i][j]);
         }
         return steineUnterZugzwang;
-    }
-
-    private boolean richtigeFarbe() {
-        return this.zugFarbe == this.aktuellerStein.getFarbe();
-    }
-
-    private boolean zugIstMoeglich() {
-        boolean moeglich = false;
-        for (int[] moeglichesZiel: this.aktuellerStein.getBewegungsziele()) {
-            if (Arrays.equals(moeglichesZiel, this.zielpunkt)) {
-                moeglich = true;
-                break;
-            }
-        }
-        return moeglich;
     }
 
     private void zieheFigur() {
