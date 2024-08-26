@@ -9,23 +9,23 @@ import static java.lang.Math.abs;
 import static alleDateien.mvc.SpielData.aktuellepgn;
 
 public class Dame extends Spielstein {
-    private int pos_x;
-    private int pos_y;
+    private final int pos_x;
+    private final int pos_y;
 
-    private int farbe;
+    private final int farbe;
 
-    private int laufrichtung;
+    private final int laufrichtung;
 
     private Boolean zugzwang;
     private Boolean bewegungsfaehig;
 
-    private List<int[]> bewegungsziele = new ArrayList<>();
-    private HashMap<List<Integer>, List<int[]>> bewegungszieleMitPfad = new HashMap<>();
-    private List<List<int[]>> bewegungspfadeGehen = new ArrayList<>();
-    private List<List<int[]>> bewegungspfadeSchlagen = new ArrayList<>();
-    private List<List<int[]>> bewegungspfadeMerkeGehen = new ArrayList<>();
+    private final List<int[]> bewegungsziele = new ArrayList<>();
+    private final HashMap<List<Integer>, List<int[]>> bewegungszieleMitPfad = new HashMap<>();
+    private final List<List<int[]>> bewegungspfadeGehen = new ArrayList<>();
+    private final List<List<int[]>> bewegungspfadeSchlagen = new ArrayList<>();
+    private final List<List<int[]>> bewegungspfadeMerkeGehen = new ArrayList<>();
     private List<List<int[]>> bewegungspfadeMerkeSchlagen = new ArrayList<>();
-    private List<int[]> bereitsGeschlageneFiguren = new ArrayList<>();
+    private final List<int[]> bereitsGeschlageneFiguren = new ArrayList<>();
 
 
     public Dame(int pos_x, int pos_y, int farbe) {
@@ -41,7 +41,7 @@ public class Dame extends Spielstein {
         setBewegungspfade();
 
         // Falls Figur schlagen kann, werden nur ziele mit Schlag angezeigt
-        if (this.bewegungspfadeSchlagen.size() == 0) {
+        if (this.bewegungspfadeSchlagen.isEmpty()) {
             for (List<int[]> pfad : this.bewegungspfadeGehen) {
                 findeZielposition(pfad);
             }
@@ -113,7 +113,7 @@ public class Dame extends Spielstein {
     }
 
     private void verfolgeBewegungsfaehigkeiten(List<int[]> bewegungspfadeEineRichtung, int[] sprungweiten, int x, int y, List<int[]> bewegungspfadeEineRichtungAlt) {
-        if (this.bewegungspfadeMerkeSchlagen.size() != 0) {
+        if (!this.bewegungspfadeMerkeSchlagen.isEmpty()) {
             List<List<int[]>> bewegungspfadeSchlagen = this.bewegungspfadeMerkeSchlagen;
             this.bewegungspfadeMerkeSchlagen = new ArrayList<>(); //Leeren für nächsten Schritt auf dem Pfad
             for (List<int[]> bewegungspfad: bewegungspfadeSchlagen) {
@@ -123,8 +123,7 @@ public class Dame extends Spielstein {
                 int neu_y = y + bewegungspfad.get(bewegungspfad.size() - 1)[1];
                 pruefeEinenSchritt(neu_x, neu_y, bewegungspfadSum);
             }
-        }
-        else {
+        } else {
             this.bewegungspfadeSchlagen.add(bewegungspfadeEineRichtungAlt);
         }
     }
@@ -254,6 +253,4 @@ public class Dame extends Spielstein {
     public List<List<int[]>> getBewegungspfadeSchlagen() {
         return bewegungspfadeSchlagen;
     }
-
-
 }
