@@ -148,7 +148,6 @@ public class SpielLogik {
         return true;
     }
 
-
     public int aendereAktuellenSpieler() {
         if (this.zugFarbe == 1) { // weiß hat gespielt, jetzt schwarz
             return -1;
