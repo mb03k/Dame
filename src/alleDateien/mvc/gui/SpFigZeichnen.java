@@ -13,7 +13,6 @@ public class SpFigZeichnen extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        //super.paintComponent(g); // FEHlER: Markierungen werden nicht richtig angezeigt
         Graphics2D g2d = (Graphics2D) g;
 
         g2d.setColor(getColor());
@@ -21,11 +20,11 @@ public class SpFigZeichnen extends JPanel {
         int diameter = Math.min(getWidth(), getHeight());
         diameter *= 0.8;
 
-        int xOuter = (getWidth() - diameter) / 2;
-        int yOuter = (getHeight() - diameter) / 2;
+        int xAussen = (getWidth() - diameter) / 2;
+        int yAussen = (getHeight() - diameter) / 2;
 
         g2d.setColor(getColor());
-        g2d.fillOval(xOuter, yOuter, diameter, diameter);
+        g2d.fillOval(xAussen, yAussen, diameter, diameter);
     }
 
     public Color getColor() {
@@ -35,5 +34,4 @@ public class SpFigZeichnen extends JPanel {
             return Color.WHITE;
         }
     }
-
 }

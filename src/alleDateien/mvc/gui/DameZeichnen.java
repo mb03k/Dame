@@ -13,35 +13,34 @@ public class DameZeichnen extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        //super.paintComponent(g); // FEHLER: Markierungen werden nicht richtig angezeigt
         Graphics2D g2d = (Graphics2D) g;
 
         int diameter = Math.min(getWidth(), getHeight());
         diameter *= 0.8;
 
         // Durchmesser äußerer Kreis
-        int xOuter = (getWidth() - diameter) / 2;
-        int yOuter = (getHeight() - diameter) / 2;
+        int xAussen = (getWidth() - diameter) / 2;
+        int yInnen = (getHeight() - diameter) / 2;
 
-        // Äußerste Kreis
+        // Äußerstes Kreis färben
         g2d.setColor(getColor());
-        g2d.fillOval(xOuter, yOuter, diameter, diameter);
+        g2d.fillOval(xAussen, yInnen, diameter, diameter);
 
         // Durchmesser des mittleren Kreises
-        int middleDiameter = (int) (diameter * 0.6);
-        int xMiddle = xOuter + (diameter - middleDiameter) / 2;
-        int yMiddle = yOuter + (diameter - middleDiameter) / 2;
+        int mitteDiameter = (int) (diameter * 0.6);
+        int xMitte = xAussen + (diameter - mitteDiameter) / 2;
+        int yMitte = yInnen + (diameter - mitteDiameter) / 2;
 
-        // Mittlerer Kreis
+        // Mittleren Kreis färben
         g2d.setColor(Color.GRAY);
-        g2d.fillOval(xMiddle, yMiddle, middleDiameter, middleDiameter);
+        g2d.fillOval(xMitte, yMitte, mitteDiameter, mitteDiameter);
 
-        // Durchmesser des inneren Kreises (schwarz)
+        // Durchmesser des inneren Kreises
         int innerDiameter = (int) (diameter * 0.3);
-        int xInner = xOuter + (diameter - innerDiameter) / 2;
-        int yInner = yOuter + (diameter - innerDiameter) / 2;
+        int xInner = xAussen + (diameter - innerDiameter) / 2;
+        int yInner = yInnen + (diameter - innerDiameter) / 2;
 
-        // Innerster Kreis
+        // Innersten Kreis färben
         g2d.setColor(getColor());
         g2d.fillOval(xInner, yInner, innerDiameter, innerDiameter);
     }
