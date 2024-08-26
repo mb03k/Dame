@@ -16,7 +16,7 @@ import static java.lang.System.exit;
 public class SpielGUI extends Main {
 
     private String modus;
-    private int[][] pgn=new int[8][8]; //das in Data?
+    private int[][] pgn = new int[8][8];
     private Spielstein[][] steinpgn = new Spielstein[8][8];
 
     private JButton spielfeldButtonListener;
@@ -50,9 +50,13 @@ public class SpielGUI extends Main {
 
         this.afterDebugPGN = new int[8][8];
         fenster.setVisible(true);
+        System.out.println("starteGUI gekonnt ignoriert");
     }
 
     public void setSpielfeld() {
+
+        starteGUI();
+
         setMenueBar();
         setGridLayout();
 
@@ -317,29 +321,6 @@ public class SpielGUI extends Main {
         this.steinpgn = SpielData.getSteinpgn();
     }
 
-    // Standardaufstellung zum spielen
-    public void setStandardPGN() {
-        this.pgn = SpielData.standardpgn;
-        this.steinpgn = SpielData.steinpgn;
-
-
-//        this.pgn = new int[][] {
-//                // a, b, c, d, e, f, g, h
-//                // -1 = Bauer schwarz
-//                // -2 = Dame schwarz
-//                // 1 = Bauer weiß
-//                // 2 = Dame weiß
-//                // 0 = leer
-//                {0, -1, 0, -1, 0, -1, 0, -1},
-//                {-1, 0, -1, 0, -1, 0, -1, 0},
-//                {0, -1, 0, -1, 0, -1, 0, -1},
-//                {0, 0, 0, 0, 0, 0, 0, 0},
-//                {0, 0, 0, 0, 0, 0, 0, 0},
-//                {1, 0, 1, 0, 1, 0, 1, 0},
-//                {0, 1, 0, 1, 0, 1, 0, 1},
-//                {1, 0, 1, 0, 1, 0, 1, 0}};
-    }
-
     // Debug-Modus: neue Figuren anzeigen
     public void aktualisierePGN_debug(int i, int j) {
         // live anzeigen der neuen Steine
@@ -350,6 +331,11 @@ public class SpielGUI extends Main {
         setMenueBar();
         setSpielfeld();
         fenster.repaint();
+    }
+
+    public void setStandardPGN() {
+        this.pgn = SpielData.standardpgn;
+        this.steinpgn = SpielData.steinpgn;
     }
 
     public void setGespeichertePGN() {

@@ -15,7 +15,6 @@ public class SpielSpeichern {
     }
 
     public void speichereSpiel() {
-
         try {
             FileWriter file = new FileWriter(spiel_ort);
 
@@ -50,7 +49,7 @@ public class SpielSpeichern {
             {
                 String[] zeichen = zeileLesen.split(",");
                 int spalte = 0;
-                for(String  c : zeichen)
+                for(String c : zeichen)
                 {
                     pgn[zeile][spalte] = Integer.parseInt(c);
                     spalte++;

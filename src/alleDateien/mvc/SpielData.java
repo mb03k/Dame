@@ -20,15 +20,15 @@ public class SpielData {
         {0, 0, 0, 0, 0, 0, 0, 0},
         {1, 0, 1, 0, 1, 0, 1, 0},
         {0, 1, 0, 1, 0, 1, 0, 1},
-        {1, 0, 1, 0, 1, 0, 1, 0}};
-
+        {1, 0, 1, 0, 1, 0, 1, 0}
+    };
 
     public static Spielstein[][] steinpgn = new Spielstein[8][8];
     public static int[][] aktuellepgn = new int[8][8];
 
     public SpielData() {
-        this.aktuellepgn = standardpgn;
-        erstelleSteinpgn(this.aktuellepgn);
+        aktuellepgn = standardpgn;
+        erstelleSteinpgn(aktuellepgn);
     }
 
     public static void erstelleSteinpgn(int[][] zahlenpgn) {
@@ -68,6 +68,4 @@ public class SpielData {
     public static void setAktuellepgn(int[][] aktuellepgn) {
         SpielData.aktuellepgn = aktuellepgn;
     }
-
 }
-
