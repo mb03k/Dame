@@ -7,7 +7,6 @@ import java.util.List;
 import static java.lang.Math.abs;
 import static alleDateien.mvc.SpielData.aktuellepgn;
 
-
 public class Bauer extends Spielstein {
     private final int pos_x;
     private final int pos_y;
@@ -16,15 +15,12 @@ public class Bauer extends Spielstein {
     private int laufrichtung;
 
     private Boolean zugzwang;
-    private Boolean bewegungsfaehig;
 
     private final List<int[]> bewegungsziele = new ArrayList<>();
 
     private final HashMap<List<Integer>, List<int[]>> bewegungszieleMitPfad = new HashMap<>();
     private final List<List<int[]>> bewegungspfadeGehen = new ArrayList<>();
     private final List<List<int[]>> bewegungspfadeSchlagen = new ArrayList<>();
-
-
 
     public Bauer(int pos_x, int pos_y, int farbe) {
         this.pos_x = pos_x;
@@ -40,8 +36,6 @@ public class Bauer extends Spielstein {
         setBewegungsziele(); //ermittle mögliche Zielkoordinaten "bewegungsziele", die Bewegungspfade durch eine Liste aller schritte für jeden Pfad, unf prüfe ob Zugzwang besteht oder bewegungsfähigkeit gegeben ist
     }
 
-
-
     public void setBewegungsziele() {
         this.zugzwang = false;
         setBewegungspfade();
@@ -56,13 +50,6 @@ public class Bauer extends Spielstein {
             for (List<int[]> pfad : this.bewegungspfadeSchlagen) {
                 findeZielposition(pfad);
             }
-        }
-
-        if (this.bewegungsziele.isEmpty()) {
-            this.bewegungsfaehig = false;
-        }
-        else {
-            this.bewegungsfaehig = true;
         }
     }
 
@@ -102,6 +89,13 @@ public class Bauer extends Spielstein {
         verfolgeBewegungsfaehigkeiten(sprung, x, y, pfadAlt);
     }
 
+    //Step 1
+    private void pruefeBewegungsfaehigkeiten(int[] sprungweiten,int x, int y) {
+        for (int i = 0; i < 2; i++) {
+            pruefeBewegungsfaehigkeit(sprungweiten, i, x, y);
+        }
+    }
+
     // Step 2
     private void verfolgeBewegungsfaehigkeiten(int[] sprungweiten, int x, int y) {
         for (int i = 0; i < 2; i++) {
@@ -119,7 +113,6 @@ public class Bauer extends Spielstein {
                 int neu_y = y + sprungweiten[i];
                 pruefeEinenSchritt(neu_x, neu_y, pfad);
             }
-
         }
     }
 
@@ -131,23 +124,6 @@ public class Bauer extends Spielstein {
         }
         else {
             this.bewegungspfadeSchlagen.add(pfadAlt);
-        }
-    }
-
-    private void testeVerzweigung(int[] sprungweiten, int x, int y, List<int[]> pfadAlt, int i) {
-        if (abs(sprungweiten[i]) == 2) {
-            int[] sprungPosition = {abs(sprungweiten[i]) * this.laufrichtung, sprungweiten[i]};
-            pfadAlt.add(sprungPosition);
-            int neu_x = x + 2 * this.laufrichtung;
-            int neu_y = y + sprungweiten[i];
-            pruefeEinenSchritt(neu_x, neu_y, pfadAlt);
-        }
-    }
-
-    //Step 1
-    private void pruefeBewegungsfaehigkeiten(int[] sprungweiten,int x, int y) {
-        for (int i = 0; i < 2; i++) {
-            pruefeBewegungsfaehigkeit(sprungweiten, i, x, y);
         }
     }
 
@@ -173,6 +149,16 @@ public class Bauer extends Spielstein {
         }
     }
 
+    private void testeVerzweigung(int[] sprungweiten, int x, int y, List<int[]> pfadAlt, int i) {
+        if (abs(sprungweiten[i]) == 2) {
+            int[] sprungPosition = {abs(sprungweiten[i]) * this.laufrichtung, sprungweiten[i]};
+            pfadAlt.add(sprungPosition);
+            int neu_x = x + 2 * this.laufrichtung;
+            int neu_y = y + sprungweiten[i];
+            pruefeEinenSchritt(neu_x, neu_y, pfadAlt);
+        }
+    }
+
     private void schlagenOderNichtSchlagen(int[] sprungweiten, int i, int x, int y) {
         if (aktuellepgn[x + 2 * this.laufrichtung][y + sprungweiten[i]] != 0) {
             sprungweiten[i] = 0;
@@ -192,10 +178,6 @@ public class Bauer extends Spielstein {
     @Override
     public List<int[]> getBewegungsziele() {
         return bewegungsziele;
-    }
-
-    public Boolean getBewegungsfaehig() {
-        return bewegungsfaehig;
     }
 
     @Override
