@@ -9,21 +9,20 @@ import static alleDateien.mvc.SpielData.aktuellepgn;
 
 
 public class Bauer extends Spielstein {
-    private int pos_x;
-    private int pos_y;
+    private final int pos_x;
+    private final int pos_y;
 
-    private int farbe;
-
+    private final int farbe;
     private int laufrichtung;
 
     private Boolean zugzwang;
     private Boolean bewegungsfaehig;
 
-    private List<int[]> bewegungsziele = new ArrayList<>();
+    private final List<int[]> bewegungsziele = new ArrayList<>();
 
-    private HashMap<List<Integer>, List<int[]>> bewegungszieleMitPfad = new HashMap<>();
-    private List<List<int[]>> bewegungspfadeGehen = new ArrayList<>();
-    private List<List<int[]>> bewegungspfadeSchlagen = new ArrayList<>();
+    private final HashMap<List<Integer>, List<int[]>> bewegungszieleMitPfad = new HashMap<>();
+    private final List<List<int[]>> bewegungspfadeGehen = new ArrayList<>();
+    private final List<List<int[]>> bewegungspfadeSchlagen = new ArrayList<>();
 
 
 
@@ -48,7 +47,7 @@ public class Bauer extends Spielstein {
         setBewegungspfade();
 
         // Falls Figur schlagen kann, werden nur ziele mit Schlag angezeigt
-        if (this.bewegungspfadeSchlagen.size() == 0) {
+        if (this.bewegungspfadeSchlagen.isEmpty()) {
             for (List<int[]> pfad : this.bewegungspfadeGehen) {
                 findeZielposition(pfad);
             }
@@ -65,7 +64,6 @@ public class Bauer extends Spielstein {
         else {
             this.bewegungsfaehig = true;
         }
-
     }
 
     private void findeZielposition(List<int[]> pfad) {
@@ -138,12 +136,11 @@ public class Bauer extends Spielstein {
 
     private void testeVerzweigung(int[] sprungweiten, int x, int y, List<int[]> pfadAlt, int i) {
         if (abs(sprungweiten[i]) == 2) {
-            List<int[]> pfad = pfadAlt;
             int[] sprungPosition = {abs(sprungweiten[i]) * this.laufrichtung, sprungweiten[i]};
-            pfad.add(sprungPosition);
+            pfadAlt.add(sprungPosition);
             int neu_x = x + 2 * this.laufrichtung;
             int neu_y = y + sprungweiten[i];
-            pruefeEinenSchritt(neu_x, neu_y, pfad);
+            pruefeEinenSchritt(neu_x, neu_y, pfadAlt);
         }
     }
 
@@ -187,9 +184,6 @@ public class Bauer extends Spielstein {
 
 
 
-
-
-
     @Override
     public Boolean getZugzwang() {
         return zugzwang;
@@ -223,8 +217,4 @@ public class Bauer extends Spielstein {
     public List<List<int[]>> getBewegungspfadeSchlagen() {
         return bewegungspfadeSchlagen;
     }
-
-
-
-
 }
