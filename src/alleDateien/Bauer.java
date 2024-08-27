@@ -34,14 +34,14 @@ public class Bauer extends Spielstein {
             case -1:
                 this.laufrichtung = 1; //schwarz
         }
-        setBewegungsziele(); //ermittle mögliche Zielkoordinaten "bewegungsziele", die Bewegungspfade durch eine Liste aller schritte für jeden Pfad, unf prüfe ob Zugzwang besteht oder bewegungsfähigkeit gegeben ist
+        setBewegungsziele();
     }
 
     public void setBewegungsziele() {
         this.zugzwang = false;
         setBewegungspfade();
 
-        // Falls Figur schlagen kann, werden nur ziele mit Schlag angezeigt
+        // Falls Figur schlagen kann werden nur ziele mit Schlag angezeigt
         if (this.bewegungspfadeSchlagen.isEmpty()) {
             for (List<int[]> pfad : this.bewegungspfadeGehen) {
                 findeZielposition(pfad);
@@ -84,15 +84,15 @@ public class Bauer extends Spielstein {
         pruefeEinenSchritt(pos_x, pos_y); //Methode ruft sich selbst neu auf für jeden Schritt und speichert alle Pfade ab
     }
 
-    // Methoden um Liste "bewegungspfade" zu bestimmen. Methoden rufen sich selbst neu auf und durchlaufen jeden Pfad.
+    // Methoden um Liste "bewegungspfade" zu bestimmen. Methoden rufen sich selbst neu auf und durchlaufen jeden Pfad
     private void pruefeEinenSchritt(int x, int y) {
-        int[] sprung = {-1, 1}; //y-Richtung (1), y-Richtung (2)
+        int[] sprung = {-1, 1}; // y-Richtung, y-Richtung
         pruefeBewegungsfaehigkeiten(sprung, x, y);
         verfolgeBewegungsfaehigkeiten(sprung, x, y);
     }
 
     private void pruefeEinenSchritt(int x, int y, List<int[]> pfadAlt) {
-        int[] sprung = {-1, 1}; //y-Richtung (1), y-Richtung (2)
+        int[] sprung = {-1, 1}; // y-Richtung, y-Richtung
         pruefeBewegungsfaehigkeiten(sprung, x, y);
         verfolgeBewegungsfaehigkeiten(sprung, x, y, pfadAlt);
     }
@@ -176,8 +176,6 @@ public class Bauer extends Spielstein {
         }
     }
 
-
-
     @Override
     public Boolean getZugzwang() {
         return zugzwang;
@@ -203,7 +201,7 @@ public class Bauer extends Spielstein {
         return bewegungspfadeSchlagen;
     }
 
-    @Override
+    //@Override
     public Boolean getBewegungsfaehig() {
         return bewegungsfaehig;
     }
