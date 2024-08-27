@@ -6,27 +6,13 @@ import alleDateien.Leerfeld;
 import alleDateien.Spielstein;
 
 public class SpielData {
-    public final static int[][] standardpgn = new int[][] {
-        // a, b, c, d, e, f, g, h
-        // -1 = Bauer schwarz
-        // -2 = Dame schwarz
-        // 1 = Bauer weiß
-        // 2 = Dame weiß
-        // 0 = leer
-        {0, -1, 0, -1, 0, -1, 0, -1},
-        {-1, 0, -1, 0, -1, 0, -1, 0},
-        {0, -1, 0, -1, 0, -1, 0, -1},
-        {0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0},
-        {1, 0, 1, 0, 1, 0, 1, 0},
-        {0, 1, 0, 1, 0, 1, 0, 1},
-        {1, 0, 1, 0, 1, 0, 1, 0}
-    };
+    public static int[][] standardpgn;
 
     public static Spielstein[][] steinpgn = new Spielstein[8][8];
     public static int[][] aktuellepgn = new int[8][8];
 
     public SpielData() {
+        setStandardpgn();
         aktuellepgn = standardpgn;
         erstelleSteinpgn(aktuellepgn);
     }
@@ -65,11 +51,30 @@ public class SpielData {
         return steinpgn;
     }
 
+    public static int[][] getStandardpgn() {
+        return standardpgn;
+    }
+
     public static void setAktuellepgn(int[][] aktuellepgn) {
         SpielData.aktuellepgn = aktuellepgn;
     }
 
-    public static int[][] getStandardpgn() {
-        return standardpgn;
+    private static void setStandardpgn() {
+        standardpgn = new int[][] {
+            // a, b, c, d, e, f, g, h
+            // -1 = Bauer schwarz
+            // -2 = Dame schwarz
+            // 1 = Bauer weiß
+            // 2 = Dame weiß
+            // 0 = leer
+            {0, -1, 0, -1, 0, -1, 0, -1},
+            {-1, 0, -1, 0, -1, 0, -1, 0},
+            {0, -1, 0, -1, 0, -1, 0, -1},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {1, 0, 1, 0, 1, 0, 1, 0},
+            {0, 1, 0, 1, 0, 1, 0, 1},
+            {1, 0, 1, 0, 1, 0, 1, 0}
+        };
     }
 }

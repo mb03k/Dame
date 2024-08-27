@@ -12,13 +12,13 @@ import static java.lang.System.exit;
 public class Startbildschirm {
     static public JFrame fenster = new Fenster();
     private SpielGUI gui = new SpielGUI();
-    private SpielData data = new SpielData();
 
     public Startbildschirm() {
     }
 
     public void setStartbildschirm() {
         // Design für Hauptbildschirm
+        SpielData data = new SpielData();
         fenster.setLayout(new GridBagLayout());
 
         JPanel elementPanel = new JPanel(new GridBagLayout());

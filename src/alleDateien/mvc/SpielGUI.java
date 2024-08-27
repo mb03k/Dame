@@ -63,14 +63,6 @@ public class SpielGUI extends Main {
             }
         }
 
-        System.out.println("Aktuelle pgn: - setSpielfeld");
-        for (int i=0; i<8;i++) {
-            for (int j=0; j<8; j++) {
-                System.out.print(pgn[i][j]+"|");
-            }
-            System.out.println();
-        }
-
         checkModus();
     }
 
@@ -252,10 +244,12 @@ public class SpielGUI extends Main {
             loeschen.addActionListener(e -> debugSetzeSpielfigur(0));
             spielStarten.addActionListener(e -> debugStarten());
 
-            wBauer.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            wBauer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             bBauer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            wDame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            wDame.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             bDame.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            loeschen.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            spielStarten.setBackground(Color.decode("9498256"));
 
             debug.add(wDame);
             debug.add(wBauer);
@@ -274,7 +268,7 @@ public class SpielGUI extends Main {
         JMenuItem speichern_menuItem = new JMenuItem("Speichern\tstrg-s");
         speichern_menuItem.addActionListener(e -> spielSpeichern());
         JMenuItem startseite_menuItem = new JMenuItem("Startseite");
-        startseite_menuItem.addActionListener(e -> setStartseite());
+        startseite_menuItem.addActionListener(e -> setzeStartseite());
         JMenuItem beenden_menuItem = new JMenuItem("Beenden");
         beenden_menuItem.addActionListener(e -> spielBeenden());
         dateiMenue.add(speichern_menuItem);
@@ -299,7 +293,7 @@ public class SpielGUI extends Main {
         if (pgn[i][j]==0) {
             spielfeldButtonListener.addActionListener(e -> schlageFigur(i, j));
         } else {
-            spielfeldButtonListener.addActionListener(e -> logik.aktiviereFeld(i, j, steinpgn, pgn));
+            spielfeldButtonListener.addActionListener(e -> logik.aktiviereSpielstein(i, j, steinpgn, pgn));
         }
     }
 
@@ -318,7 +312,7 @@ public class SpielGUI extends Main {
     }
 
     private void aktualisiereSteinPGN(int[][] pgn) {
-        SpielData.erstelleSteinpgn(pgn); //hier könnte man verbessern, indem man nicht jedes Mal alle Objekte neu erstellt, sondern nur relevante abändert
+        SpielData.erstelleSteinpgn(pgn);
         this.steinpgn = SpielData.getSteinpgn();
     }
 
@@ -353,40 +347,53 @@ public class SpielGUI extends Main {
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, optionen, optionen[0]);
     }
 
-    public void setStartseite() {
+    public void setzeStartseite() {
         if (spielIstGespeichert()) { // wenn PGN's ungleich
-            System.out.println("JA - ich möchte speichern - setStartseite");
             infoBox();
             if (option == JOptionPane.YES_OPTION) { // abbrechen
-                System.out.println("Startseite!!! - setStartseite");
                 clearSpielGUI();
             }
         } else {
-            System.out.println("KEINE speichernAbfrage() - setStartseite");
             clearSpielGUI();
         }
     }
 
-    public void spielBeenden() {
-        System.out.println("hallo?");
-        if (spielIstGespeichert()) { // wenn PGN's ungleich
-            System.out.println("JA - ich möchte speichern - spielBeenden");
-            infoBox(); // Warnung wenn spiel nicht gespeichert wurde
-            if (option == JOptionPane.YES_OPTION) {
-                System.out.println("BEENDEN!!! - spielBeenden");
-                exit(0);
-            }
-        } else {
-            System.out.println("KEINE speichernAbfrage() - spielBeenden");
-            exit(0);
-        }
-    }
-
     public boolean spielIstGespeichert() {
+
+        int[][] haus = speichern.getGeladenePGN();
+        System.out.println("gespeichertePGN:");
+        for (int i=0; i<8; i++) {
+            for (int j=0; j<8; j++) {
+                System.out.print(haus[i][j]+"|");
+            }
+            System.out.println();
+        }
+        System.out.println("----------------");
+
+        System.out.println("this.pgn:");
+        for (int i=0; i<8; i++) {
+            for (int j=0; j<8; j++) {
+                System.out.print(pgn[i][j]+"|");
+            }
+            System.out.println();
+        }
+        System.out.println("----------------");
+
         return !Arrays.deepEquals( // wenn gleich: true; else: false
                 speichern.getGeladenePGN(),
                 this.pgn
         );
+    }
+
+    public void spielBeenden() {
+        if (spielIstGespeichert()) { // wenn PGN's ungleich
+            infoBox(); // Warnung wenn spiel nicht gespeichert wurde
+            if (option == JOptionPane.YES_OPTION) {
+                exit(0);
+            }
+        } else {
+            exit(0);
+        }
     }
 
     public void clearSpielGUI() {

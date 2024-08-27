@@ -37,14 +37,13 @@ public class SpielLogik {
         this.aktuellerStein = steinpgn[y][x];
     }
 
-
     public int[][] schlageOderBewege(int newY, int newX) { // wenn leeres Feld angeklickt wird
         this.newY = newY;
         this.newX = newX;
         this.zielpunkt = new int[]{newY, newX}; //Hier schauen ob ersetzbar durch zielpunktListe
         this.zielpunktListe = new ArrayList<>(Arrays.asList(newY, newX));
 
-        if (zugIstMoeglich() && richtigeFarbe() && testeZugzwang()) {
+        if (aktuellerStein!=null && zugIstMoeglich() && richtigeFarbe() && testeZugzwang()) {
             zieheFigur();
             return pgn;
         }
@@ -163,12 +162,7 @@ public class SpielLogik {
         }
     }
 
-    public void aktiviereFeld(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
-        System.out.println("Klick! " + i + " , " + j);
-        aktiviereSpielstein(i, j, steinpgn, pgn);
-    }
-
-    private void aktiviereSpielstein(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
+    public void aktiviereSpielstein(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
         List<int[]> bewegungsziele = steinpgn[i][j].getBewegungsziele();
         markiereZieleFarbig(bewegungsziele);
         setAttributes(i, j, pgn, steinpgn);
