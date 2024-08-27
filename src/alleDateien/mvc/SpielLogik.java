@@ -120,7 +120,6 @@ public class SpielLogik {
         }
         this.pgn[y_arr][x_arr] = 0;
 
-        spielEnde();
         this.zugFarbe = aendereAktuellenSpieler();
     }
 
