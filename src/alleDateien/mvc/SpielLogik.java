@@ -24,8 +24,6 @@ public class SpielLogik {
 
     private int zugFarbe = 1; // 1 -> weiß ; -1 -> schwarz
 
-    //SpielLogikEnde ende = new SpielLogikEnde();
-
     public SpielLogik() {
     }
 
@@ -37,13 +35,14 @@ public class SpielLogik {
         this.aktuellerStein = steinpgn[y][x];
     }
 
+
     public int[][] schlageOderBewege(int newY, int newX) { // wenn leeres Feld angeklickt wird
         this.newY = newY;
         this.newX = newX;
         this.zielpunkt = new int[]{newY, newX}; //Hier schauen ob ersetzbar durch zielpunktListe
         this.zielpunktListe = new ArrayList<>(Arrays.asList(newY, newX));
 
-        if (aktuellerStein!=null && zugIstMoeglich() && richtigeFarbe() && testeZugzwang()) {
+        if (zugIstMoeglich() && richtigeFarbe() && testeZugzwang()) {
             zieheFigur();
             return pgn;
         }
@@ -121,6 +120,7 @@ public class SpielLogik {
         }
         this.pgn[y_arr][x_arr] = 0;
 
+        spielEnde();
         this.zugFarbe = aendereAktuellenSpieler();
     }
 
@@ -162,7 +162,12 @@ public class SpielLogik {
         }
     }
 
-    public void aktiviereSpielstein(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
+    public void aktiviereFeld(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
+        System.out.println("Klick! " + i + " , " + j);
+        aktiviereSpielstein(i, j, steinpgn, pgn);
+    }
+
+    private void aktiviereSpielstein(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
         List<int[]> bewegungsziele = steinpgn[i][j].getBewegungsziele();
         markiereZieleFarbig(bewegungsziele);
         setAttributes(i, j, pgn, steinpgn);
@@ -171,4 +176,80 @@ public class SpielLogik {
     private void markiereZieleFarbig(List<int[]> bewegungsziele) {
         SpielGUI.markiereZieleFarbig(bewegungsziele);
     }
+
+    public void spielEnde() {
+        String farbeOhneFigur = keineFigurUebrig();
+        String farbeBewegungsunfaehig = figurenNichtBewegungsfaehig();
+
+        if (farbeOhneFigur.equals("weiß") || farbeBewegungsunfaehig.equals("weiß")) {
+            SpielGUI.spielGewonnenEnde("schwarz");
+        }
+        else if (farbeOhneFigur.equals("schwarz") || farbeBewegungsunfaehig.equals("schwarz")) {
+            SpielGUI.spielGewonnenEnde("weiß");
+        }
+    }
+
+    private String figurenNichtBewegungsfaehig() {
+        int[] figurenBewegungsfaehig = {0, 0}; //[0] = weiß, [1] = schwarz
+        String farbe = "keine";
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                zaehleBewegungsfaehig(i, j, figurenBewegungsfaehig);
+                steinpgn[i][j].getBewegungsfaehig();
+            }
+        }
+        if (figurenBewegungsfaehig[0] == 0) {
+            farbe = "weiß";
+        }
+        else if (figurenBewegungsfaehig[1] == 0) {
+            farbe = "schwarz";
+        }
+        return farbe;
+    }
+
+    private void zaehleBewegungsfaehig(int i, int j, int[] figurenBewegungsfaehig) {
+        int farbe = this.steinpgn[i][j].getFarbe();
+        boolean bewegungsfaehig = this.steinpgn[i][j].getBewegungsfaehig();
+        if (farbe == 1 && bewegungsfaehig) {
+            figurenBewegungsfaehig[0]++;
+        }
+        else if (farbe == -1 && bewegungsfaehig) {
+            figurenBewegungsfaehig[1]++;
+        }
+    }
+
+    private String keineFigurUebrig() {
+        int[] figurenAnzahl = {0, 0}; //[0] = weiß, [1] = schwarz
+        String farbe = "keine";
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                zaehleFiguren(i, j, figurenAnzahl);
+            }
+        }
+//        SpielGUI.zeigeAnzahlFiguren(figurenAnzahl);
+        if (figurenAnzahl[0] == 0) {
+            farbe = "weiß";
+        }
+        else if (figurenAnzahl[1] == 0) {
+            farbe = "schwarz";
+        }
+        return farbe;
+    }
+
+    private void zaehleFiguren(int i, int j, int[] figurenAnzahl) {
+        switch (this.pgn[i][j]) {
+            case -2:
+            case -1:
+                figurenAnzahl[1]++;
+                break;
+            case 1:
+            case 2:
+                figurenAnzahl[0]++;
+                break;
+            default:
+                break;
+        }
+    }
+
 }
+
