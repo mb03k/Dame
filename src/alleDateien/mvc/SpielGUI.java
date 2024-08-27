@@ -317,15 +317,27 @@ public class SpielGUI extends Main {
     }
 
     // Debug-Modus: neue Figuren anzeigen
-    public void aktualisierePGN_debug(int i, int j) {
+    public void aktualisierePGN_debug(int y, int x) {
         // live anzeigen der neuen Steine
-        afterDebugPGN[i][j] = debug.getDebugFigur();
-        pgn[i][j] = debug.getDebugFigur();
+        pruefeBauerZuDame(y, x);
         fenster.getContentPane().removeAll();
         fenster.setJMenuBar(null);
         setMenueBar();
         setSpielfeld();
         fenster.repaint();
+    }
+
+    public void pruefeBauerZuDame(int y, int x) {
+        if (y==0 && debug.getDebugFigur()==1) {
+            afterDebugPGN[y][x] = 2;
+            pgn[y][x] = 2;
+        } else if (y==7 && debug.getDebugFigur()==-1) {
+            afterDebugPGN[y][x] = -2;
+            pgn[y][x] = -2;
+        } else {
+            afterDebugPGN[y][x] = debug.getDebugFigur();
+            pgn[y][x] = debug.getDebugFigur();
+        }
     }
 
     public void setStandardPGN() {
