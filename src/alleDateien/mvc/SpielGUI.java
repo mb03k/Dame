@@ -359,26 +359,6 @@ public class SpielGUI extends Main {
     }
 
     public boolean spielIstGespeichert() {
-
-        int[][] haus = speichern.getGeladenePGN();
-        System.out.println("gespeichertePGN:");
-        for (int i=0; i<8; i++) {
-            for (int j=0; j<8; j++) {
-                System.out.print(haus[i][j]+"|");
-            }
-            System.out.println();
-        }
-        System.out.println("----------------");
-
-        System.out.println("this.pgn:");
-        for (int i=0; i<8; i++) {
-            for (int j=0; j<8; j++) {
-                System.out.print(pgn[i][j]+"|");
-            }
-            System.out.println();
-        }
-        System.out.println("----------------");
-
         return !Arrays.deepEquals( // wenn gleich: true; else: false
                 speichern.getGeladenePGN(),
                 this.pgn
