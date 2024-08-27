@@ -29,9 +29,9 @@ To-Dos:
 - [ ] Debug-Modus: wenn man einen Bauern auf ein Feld setzt in dem es zur Dame werden sollte und man das Spiel startet, bleibt es ein Bauer
 - [ ] Figuren nur noch auf dunkle Felder setzen lassen (evtl. wie beim Dijkstra-Alg. einen 2D-Array mit 'Kanten' erzeugen und vergleichen)
 - [ ] Bug: falls ein Bauer übersprungen wird um zum Spielfeldrand zu kommen, wird man keine Dame sondern bleibt ein Bauer
-- [ ] Felder auf die man springen kann werden farbig hervorgehoben
-- [ ] Auf Windows Spielfeld schön machen
-- [ ] Mehrfachsprünge implementieren
+- [X] Felder auf die man springen farbig hervorheben
+- [X] Auf Windows Spielfeld schön machen
+- [X] Mehrfachsprünge implementieren
 - [ ] Spielspeicherung bugfix: wenn man spiel lädt und ändert wird nicht nochmal gefragt ob man speichern will
 - [X] (noch nicht überprüft, aber) was wenn noch kein spiel gespeichert wurde? -> leeres Feld wird angezeigt
 - [X] neues Spiel, figuren bewegen, speichern und zur Startseite gehen. Wenn man auf neues spiel klickt, wird das gespeicherte Spiel geladen
