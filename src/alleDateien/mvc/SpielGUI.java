@@ -313,6 +313,7 @@ public class SpielGUI extends Main {
             fenster.setJMenuBar(null);
             setMenueBar();
             setSpielfeld();
+            logik.spielEnde();
             fenster.repaint();
         }
     }
