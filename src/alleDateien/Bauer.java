@@ -15,6 +15,7 @@ public class Bauer extends Spielstein {
     private int laufrichtung;
 
     private Boolean zugzwang;
+    private Boolean bewegungsfaehig = true;
 
     private final List<int[]> bewegungsziele = new ArrayList<>();
 
@@ -50,6 +51,13 @@ public class Bauer extends Spielstein {
             for (List<int[]> pfad : this.bewegungspfadeSchlagen) {
                 findeZielposition(pfad);
             }
+        }
+
+        if (this.bewegungsziele.isEmpty()) {
+            this.bewegungsfaehig = false;
+        }
+        else {
+            this.bewegungsfaehig = true;
         }
     }
 
@@ -181,11 +189,6 @@ public class Bauer extends Spielstein {
     }
 
     @Override
-    public int getLaufrichtung() {
-        return laufrichtung;
-    }
-
-    @Override
     public int getFarbe() {
         return farbe;
     }
@@ -198,5 +201,10 @@ public class Bauer extends Spielstein {
     @Override
     public List<List<int[]>> getBewegungspfadeSchlagen() {
         return bewegungspfadeSchlagen;
+    }
+
+    @Override
+    public Boolean getBewegungsfaehig() {
+        return bewegungsfaehig;
     }
 }
