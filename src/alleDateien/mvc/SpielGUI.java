@@ -20,7 +20,7 @@ public class SpielGUI extends Main {
     private Spielstein[][] steinpgn = new Spielstein[8][8];
 
     private JButton spielfeldButtonListener;
-    private JFrame fenster;
+    private static JFrame fenster;
 
     private static JPanel[][] feld;
     private int option;
@@ -61,6 +61,14 @@ public class SpielGUI extends Main {
             for ( int j=0; j<8; j++ ) { // horizontal
                 setSpielfeldInhalte(i, j);
             }
+        }
+
+        System.out.println("Aktuelle pgn: - setSpielfeld");
+        for (int i=0; i<8;i++) {
+            for (int j=0; j<8; j++) {
+                System.out.print(pgn[i][j]+"|");
+            }
+            System.out.println();
         }
 
         checkModus();
@@ -244,12 +252,10 @@ public class SpielGUI extends Main {
             loeschen.addActionListener(e -> debugSetzeSpielfigur(0));
             spielStarten.addActionListener(e -> debugStarten());
 
-            wBauer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            wBauer.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             bBauer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            wDame.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            wDame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             bDame.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            loeschen.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-            spielStarten.setBackground(Color.decode("9498256"));
 
             debug.add(wDame);
             debug.add(wBauer);
@@ -268,7 +274,7 @@ public class SpielGUI extends Main {
         JMenuItem speichern_menuItem = new JMenuItem("Speichern\tstrg-s");
         speichern_menuItem.addActionListener(e -> spielSpeichern());
         JMenuItem startseite_menuItem = new JMenuItem("Startseite");
-        startseite_menuItem.addActionListener(e -> setzeStartseite());
+        startseite_menuItem.addActionListener(e -> setStartseite());
         JMenuItem beenden_menuItem = new JMenuItem("Beenden");
         beenden_menuItem.addActionListener(e -> spielBeenden());
         dateiMenue.add(speichern_menuItem);
@@ -293,7 +299,7 @@ public class SpielGUI extends Main {
         if (pgn[i][j]==0) {
             spielfeldButtonListener.addActionListener(e -> schlageFigur(i, j));
         } else {
-            spielfeldButtonListener.addActionListener(e -> logik.aktiviereSpielstein(i, j, steinpgn, pgn));
+            spielfeldButtonListener.addActionListener(e -> logik.aktiviereFeld(i, j, steinpgn, pgn));
         }
     }
 
@@ -312,32 +318,20 @@ public class SpielGUI extends Main {
     }
 
     private void aktualisiereSteinPGN(int[][] pgn) {
-        SpielData.erstelleSteinpgn(pgn);
+        SpielData.erstelleSteinpgn(pgn); //hier könnte man verbessern, indem man nicht jedes Mal alle Objekte neu erstellt, sondern nur relevante abändert
         this.steinpgn = SpielData.getSteinpgn();
     }
 
     // Debug-Modus: neue Figuren anzeigen
-    public void aktualisierePGN_debug(int y, int x) {
+    public void aktualisierePGN_debug(int i, int j) {
         // live anzeigen der neuen Steine
-        pruefeBauerZuDame(y, x);
+        afterDebugPGN[i][j] = debug.getDebugFigur();
+        pgn[i][j] = debug.getDebugFigur();
         fenster.getContentPane().removeAll();
         fenster.setJMenuBar(null);
         setMenueBar();
         setSpielfeld();
         fenster.repaint();
-    }
-
-    public void pruefeBauerZuDame(int y, int x) {
-        if (y==0 && debug.getDebugFigur()==1) {
-            afterDebugPGN[y][x] = 2;
-            pgn[y][x] = 2;
-        } else if (y==7 && debug.getDebugFigur()==-1) {
-            afterDebugPGN[y][x] = -2;
-            pgn[y][x] = -2;
-        } else {
-            afterDebugPGN[y][x] = debug.getDebugFigur();
-            pgn[y][x] = debug.getDebugFigur();
-        }
     }
 
     public void setStandardPGN() {
@@ -359,14 +353,32 @@ public class SpielGUI extends Main {
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, optionen, optionen[0]);
     }
 
-    public void setzeStartseite() {
+    public void setStartseite() {
         if (spielIstGespeichert()) { // wenn PGN's ungleich
+            System.out.println("JA - ich möchte speichern - setStartseite");
             infoBox();
             if (option == JOptionPane.YES_OPTION) { // abbrechen
+                System.out.println("Startseite!!! - setStartseite");
                 clearSpielGUI();
             }
         } else {
+            System.out.println("KEINE speichernAbfrage() - setStartseite");
             clearSpielGUI();
+        }
+    }
+
+    public void spielBeenden() {
+        System.out.println("hallo?");
+        if (spielIstGespeichert()) { // wenn PGN's ungleich
+            System.out.println("JA - ich möchte speichern - spielBeenden");
+            infoBox(); // Warnung wenn spiel nicht gespeichert wurde
+            if (option == JOptionPane.YES_OPTION) {
+                System.out.println("BEENDEN!!! - spielBeenden");
+                exit(0);
+            }
+        } else {
+            System.out.println("KEINE speichernAbfrage() - spielBeenden");
+            exit(0);
         }
     }
 
@@ -377,18 +389,7 @@ public class SpielGUI extends Main {
         );
     }
 
-    public void spielBeenden() {
-        if (spielIstGespeichert()) { // wenn PGN's ungleich
-            infoBox(); // Warnung wenn spiel nicht gespeichert wurde
-            if (option == JOptionPane.YES_OPTION) {
-                exit(0);
-            }
-        } else {
-            exit(0);
-        }
-    }
-
-    public void clearSpielGUI() {
+    public static void clearSpielGUI() {
         fenster.getContentPane().removeAll();
         fenster.setJMenuBar(null);
         fenster.repaint();
@@ -422,5 +423,27 @@ public class SpielGUI extends Main {
         for (int[] bewegungsziel: bewegungsziele) { // Mögliche Züge färben
             feld[bewegungsziel[0]][bewegungsziel[1]].setBackground(Color.ORANGE);
         }
+    }
+
+    public static void spielGewonnenEnde(String farbe) {
+        Object[] optionen = {"Zur Startseite", "Zum Spiel zurückkehren"};
+
+        // Anzeigen des Dialogs
+        int option = JOptionPane.showOptionDialog(
+                null,
+                farbe + " hat das Spiel gewonnen!",
+                "Spiel Gewonnen",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                optionen,
+                optionen[0]
+        );
+
+        // Überprüfen, ob der Button geklickt wurde
+        if (option == 0) {
+            clearSpielGUI();
+        }
+
     }
 }
