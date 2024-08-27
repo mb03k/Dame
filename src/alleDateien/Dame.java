@@ -45,8 +45,7 @@ public class Dame extends Spielstein {
             for (List<int[]> pfad : this.bewegungspfadeGehen) {
                 findeZielposition(pfad);
             }
-        }
-        else {
+        } else {
             for (List<int[]> pfad : this.bewegungspfadeSchlagen) {
                 findeZielposition(pfad);
             }
@@ -54,15 +53,14 @@ public class Dame extends Spielstein {
 
         if (this.bewegungsziele.isEmpty()) {
             this.bewegungsfaehig = false;
-        }
-        else {
+        } else {
             this.bewegungsfaehig = true;
         }
     }
 
     private void findeZielposition(List<int[]> pfad) {
         int[] ziel = {this.pos_x, this.pos_y};
-        for (int[] schritt: pfad) {
+        for (int[] schritt : pfad) {
             ziel[0] += schritt[0];
             ziel[1] += schritt[1];
         }
@@ -100,12 +98,12 @@ public class Dame extends Spielstein {
 
     //Step 2:
     private void verfolgeBewegungsfaehigkeiten(List<int[]> bewegungspfadeEineRichtung, int[] sprungweiten, int x, int y) {
-        for (List<int[]> bewegungspfad: bewegungspfadeMerkeGehen) {
+        for (List<int[]> bewegungspfad : bewegungspfadeMerkeGehen) {
             this.bewegungspfadeGehen.add(bewegungspfad);
         }
         List<List<int[]>> bewegungspfadeSchlagen = this.bewegungspfadeMerkeSchlagen;
         this.bewegungspfadeMerkeSchlagen = new ArrayList<>(); //Leeren für nächsten Schritt auf dem Pfad
-        for (List<int[]> bewegungspfad: bewegungspfadeSchlagen) {
+        for (List<int[]> bewegungspfad : bewegungspfadeSchlagen) {
             int neu_x = x + bewegungspfad.get(bewegungspfad.size() - 1)[0];
             int neu_y = y + bewegungspfad.get(bewegungspfad.size() - 1)[1];
             pruefeEinenSchritt(neu_x, neu_y, bewegungspfad);
@@ -116,7 +114,7 @@ public class Dame extends Spielstein {
         if (!this.bewegungspfadeMerkeSchlagen.isEmpty()) {
             List<List<int[]>> bewegungspfadeSchlagen = this.bewegungspfadeMerkeSchlagen;
             this.bewegungspfadeMerkeSchlagen = new ArrayList<>(); //Leeren für nächsten Schritt auf dem Pfad
-            for (List<int[]> bewegungspfad: bewegungspfadeSchlagen) {
+            for (List<int[]> bewegungspfad : bewegungspfadeSchlagen) {
                 List<int[]> bewegungspfadSum = bewegungspfadeEineRichtungAlt;
                 bewegungspfadSum.add(bewegungspfad.get(0));
                 int neu_x = x + bewegungspfad.get(bewegungspfad.size() - 1)[0];
@@ -129,9 +127,9 @@ public class Dame extends Spielstein {
     }
 
     //Step 1
-    private void pruefeBewegungsfaehigkeiten(List<int[]> bewegungspfadeEineRichtung, int[] sprungweiten,int x, int y) {
-        for (int i: sprungweiten) {
-            for (int j: sprungweiten) {
+    private void pruefeBewegungsfaehigkeiten(List<int[]> bewegungspfadeEineRichtung, int[] sprungweiten, int x, int y) {
+        for (int i : sprungweiten) {
+            for (int j : sprungweiten) {
                 bewegungspfadeEineRichtung = pruefeEineRichtung(bewegungspfadeEineRichtung, i, j, x, y);
             }
         }
@@ -143,11 +141,9 @@ public class Dame extends Spielstein {
             bewegungspfadeEineRichtung = pruefeEinFeld(bewegungspfadeEineRichtung, i, j, k, x, y);
             if (bewegungspfadeEineRichtung == null) {
                 return new ArrayList<>();
-            }
-            else if (bewegungspfadeEineRichtung.size() == 0) {
+            } else if (bewegungspfadeEineRichtung.size() == 0) {
                 count++;
-            }
-            else if (bewegungspfadeEineRichtung.size() > 0) {
+            } else if (bewegungspfadeEineRichtung.size() > 0) {
                 entferneEinzelschritte(count); //da wenn man springen kann nicht gehen kann
                 this.bewegungspfadeMerkeSchlagen.add(bewegungspfadeEineRichtung);
                 return new ArrayList<>();
@@ -194,8 +190,7 @@ public class Dame extends Spielstein {
     private List<int[]> schlagenOderNichtSchlagen(List<int[]> bewegungspfadeEineRichtung, int i, int j, int k, int x, int y) {
         if (aktuellepgn[x + i * k + i / abs(i)][y + j * k + j / abs(j)] != 0) {
             return null;
-        }
-        else {
+        } else {
             this.zugzwang = true;
             int[] geschlageneFigur = {x + i * k, y + j * k};
             this.bereitsGeschlageneFiguren.add(geschlageneFigur);
@@ -207,7 +202,7 @@ public class Dame extends Spielstein {
 
     private boolean istPositionEnthalten(List<int[]> bereitsGeschlageneFiguren, int[] figurPosition) {
         boolean enthalten = false;
-        for (int[] position: bereitsGeschlageneFiguren) {
+        for (int[] position : bereitsGeschlageneFiguren) {
             if (Arrays.equals(position, figurPosition)) {
                 enthalten = true;
                 break;
@@ -215,9 +210,6 @@ public class Dame extends Spielstein {
         }
         return enthalten;
     }
-
-
-
 
 
     @Override
@@ -232,11 +224,6 @@ public class Dame extends Spielstein {
 
     public Boolean getBewegungsfaehig() {
         return bewegungsfaehig;
-    }
-
-    @Override
-    public int getLaufrichtung() {
-        return laufrichtung;
     }
 
     @Override
