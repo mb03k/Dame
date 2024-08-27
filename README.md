@@ -26,7 +26,7 @@ To-Dos:
 - [X] Spielspeicherung
 - [X] Bauer können nach unten und oben platziert werden (in 'checkBauerBewegen()')
 - [X] Damen können die eigene Farbe schlagen
-- [ ] Debug-Modus: wenn man einen Bauern auf ein Feld setzt in dem es zur Dame werden sollte und man das Spiel startet, bleibt es ein Bauer
+- [X] Debug-Modus: wenn man einen Bauern auf ein Feld setzt in dem es zur Dame werden sollte und man das Spiel startet, bleibt es ein Bauer
 - [ ] Figuren nur noch auf dunkle Felder setzen lassen (evtl. wie beim Dijkstra-Alg. einen 2D-Array mit 'Kanten' erzeugen und vergleichen)
 - [ ] Bug: falls ein Bauer übersprungen wird um zum Spielfeldrand zu kommen, wird man keine Dame sondern bleibt ein Bauer
 - [X] Felder auf die man springen farbig hervorheben
