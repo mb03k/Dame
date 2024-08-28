@@ -115,7 +115,7 @@ public class Dame extends Spielstein {
             List<List<int[]>> bewegungspfadeSchlagen = this.bewegungspfadeMerkeSchlagen;
             this.bewegungspfadeMerkeSchlagen = new ArrayList<>(); //Leeren für nächsten Schritt auf dem Pfad
             for (List<int[]> bewegungspfad : bewegungspfadeSchlagen) {
-                List<int[]> bewegungspfadSum = bewegungspfadeEineRichtungAlt;
+                List<int[]> bewegungspfadSum = new ArrayList<>(bewegungspfadeEineRichtungAlt);
                 bewegungspfadSum.add(bewegungspfad.get(0));
                 int neu_x = x + bewegungspfad.get(bewegungspfad.size() - 1)[0];
                 int neu_y = y + bewegungspfad.get(bewegungspfad.size() - 1)[1];
