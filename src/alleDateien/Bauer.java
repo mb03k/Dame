@@ -202,7 +202,7 @@ public class Bauer extends Spielstein {
         return bewegungspfadeSchlagen;
     }
 
-    //@Override
+    @Override
     public Boolean getBewegungsfaehig() {
         return bewegungsfaehig;
     }
