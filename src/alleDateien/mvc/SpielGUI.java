@@ -20,7 +20,7 @@ public class SpielGUI extends Main {
     private Spielstein[][] steinpgn = new Spielstein[8][8];
 
     private JButton spielfeldButtonListener;
-    private JFrame fenster;
+    private static JFrame fenster;
 
     private static JPanel[][] feld;
     private int option;
@@ -402,7 +402,7 @@ public class SpielGUI extends Main {
         }
     }
 
-    public void clearSpielGUI() {
+    public static void clearSpielGUI() {
         fenster.getContentPane().removeAll();
         fenster.setJMenuBar(null);
         fenster.repaint();
