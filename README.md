@@ -20,8 +20,8 @@ To-Dos:
 - [ ] auf Bugs untersuchen (und bestenfalls hier aufschreiben)
 - [x] Spielfeld beschriftung hinzufügen (1-8 und a-h)
 - [X] Spieler nur abwechselnd bewegen lassen (weiß, schwarz, weiß,...)
-- [ ] Prüfen ob Spiel zu ende ist
-- [ ] "Endscreen" - wenn jemand gewonnen hat
+- [X] Prüfen ob Spiel zu ende ist
+- [X] "Endscreen" - wenn jemand gewonnen hat
 - [X] Spielspeicherung
 - [X] Bauer können nach unten und oben platziert werden (in 'checkBauerBewegen()')
 - [X] Damen können die eigene Farbe schlagen
