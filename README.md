@@ -31,6 +31,7 @@ To-Dos:
 - [X] Auf Windows Spielfeld schön machen
 - [X] Mehrfachsprünge implementieren
 - [ ] Spielspeicherung bugfix: wenn man spiel lädt und ändert wird nicht nochmal gefragt ob man speichern will
+      - bei der Abfrage wird die SpielGUI pgn mit der SpielSpeichern pgn verglichen. Die SpielGUI pgn aktualisiert sich nicht...
 - [X] (noch nicht überprüft, aber) was wenn noch kein spiel gespeichert wurde? -> leeres Feld wird angezeigt
 - [X] neues Spiel, figuren bewegen, speichern und zur Startseite gehen. Wenn man auf neues spiel klickt, wird das gespeicherte Spiel geladen
       -> aber nicht, wenn man das Programm neu startet
