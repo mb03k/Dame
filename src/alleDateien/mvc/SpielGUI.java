@@ -320,6 +320,7 @@ public class SpielGUI extends Main {
             fenster.setJMenuBar(null);
             setMenueBar();
             setSpielfeld();
+            logik.spielEnde();
             fenster.repaint();
         }
     }
@@ -435,5 +436,27 @@ public class SpielGUI extends Main {
         for (int[] bewegungsziel: bewegungsziele) { // Mögliche Züge färben
             feld[bewegungsziel[0]][bewegungsziel[1]].setBackground(Color.ORANGE);
         }
+    }
+
+    public static void spielGewonnenEnde(String farbe) {
+        Object[] optionen = {"Zur Startseite", "Zum Spiel zurückkehren"};
+
+        // Anzeigen des Dialogs
+        int option = JOptionPane.showOptionDialog(
+                null,
+                farbe + " hat das Spiel gewonnen!",
+                "Spiel Gewonnen",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                optionen,
+                optionen[0]
+        );
+
+        // Überprüfen, ob der Button geklickt wurde
+        if (option == 0) {
+            clearSpielGUI();
+        }
+
     }
 }
