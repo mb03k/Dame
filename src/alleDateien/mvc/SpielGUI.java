@@ -273,12 +273,17 @@ public class SpielGUI extends Main {
         // Menüleiste
         menueLeiste = new JMenuBar();
         JMenu dateiMenue = new JMenu("Datei");
-        JMenuItem speichern_menuItem = new JMenuItem("Speichern\tstrg-s");
+        JMenuItem speichern_menuItem = new JMenuItem("Speichern");
         speichern_menuItem.addActionListener(e -> spielSpeichern());
         JMenuItem startseite_menuItem = new JMenuItem("Startseite");
         startseite_menuItem.addActionListener(e -> setzeStartseite());
         JMenuItem beenden_menuItem = new JMenuItem("Beenden");
         beenden_menuItem.addActionListener(e -> spielBeenden());
+
+        speichern_menuItem.setBackground(Color.decode("#92C7CF"));
+        startseite_menuItem.setBackground(Color.decode("#AAD7D9"));
+        beenden_menuItem.setBackground(Color.decode("#91C8E4"));
+
         dateiMenue.add(speichern_menuItem);
         dateiMenue.add(startseite_menuItem);
         dateiMenue.add(beenden_menuItem);
