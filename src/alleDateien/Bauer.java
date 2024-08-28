@@ -127,7 +127,8 @@ public class Bauer extends Spielstein {
     private void verfolgeBewegungsfaehigkeiten(int[] sprungweiten, int x, int y, List<int[]> pfadAlt) {
         if (abs(sprungweiten[0]) == 2 || abs(sprungweiten[1]) == 2) {
             for (int i = 0; i < 2; i++) {
-                testeVerzweigung(sprungweiten, x, y, pfadAlt, i);
+                List<int[]> pfadAltVortsetzung = new ArrayList<>(pfadAlt);
+                testeVerzweigung(sprungweiten, x, y, pfadAltVortsetzung, i);
             }
         }
         else {
