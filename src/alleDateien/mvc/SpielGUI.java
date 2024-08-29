@@ -90,11 +90,15 @@ public class SpielGUI extends Main {
         setSpielfigur(i, j);
     }
 
-    private static void faerbeHintergrund(int i, int j) {
-        feld[i][j].setBackground(Color.GRAY);
-        if ((j+i) % 2 == 1) { // jedes zweite Feld färben
-            feld[i][j].setBackground(Color.DARK_GRAY);
+    private static void faerbeHintergrund(int y, int x) {
+        feld[y][x].setBackground(Color.GRAY);
+        if (hintergrundIstDunkel(y, x)) { // jedes zweite Feld färben
+            feld[y][x].setBackground(Color.DARK_GRAY);
         }
+    }
+
+    private static boolean hintergrundIstDunkel(int y, int x) {
+        return ((y+x) % 2 == 1);
     }
 
     public void setGridLayout() {
@@ -323,13 +327,15 @@ public class SpielGUI extends Main {
 
     // Debug-Modus: neue Figuren anzeigen
     public void aktualisierePGN_debug(int y, int x) {
-        // live anzeigen der neuen Steine
-        pruefeBauerZuDame(y, x);
-        fenster.getContentPane().removeAll();
-        fenster.setJMenuBar(null);
-        setMenueBar();
-        setSpielfeld();
-        fenster.repaint();
+        if (hintergrundIstDunkel(y, x)) {
+            // live anzeigen der neuen Steine
+            pruefeBauerZuDame(y, x);
+            fenster.getContentPane().removeAll();
+            fenster.setJMenuBar(null);
+            setMenueBar();
+            setSpielfeld();
+            fenster.repaint();
+        }
     }
 
     public void pruefeBauerZuDame(int y, int x) {
