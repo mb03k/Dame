@@ -28,6 +28,7 @@ public class SpielLogik {
     }
 
     public void setAttributes(int y, int x, int[][] pgn, Spielstein[][] steinpgn) {
+        System.out.println("setAttributes");
         this.pgn = pgn;
         this.steinpgn = steinpgn;
         this.y_arr = y;
@@ -160,13 +161,23 @@ public class SpielLogik {
     }
 
     public void aktiviereSpielstein(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
-        List<int[]> bewegungsziele = steinpgn[i][j].getBewegungsziele();
-        markiereZieleFarbig(bewegungsziele);
         setAttributes(i, j, pgn, steinpgn);
+        List<int[]> bewegungsziele = steinpgn[i][j].getBewegungsziele();
+        checkRichtigeFarbe(bewegungsziele);
     }
 
-    private void markiereZieleFarbig(List<int[]> bewegungsziele) {
-        SpielGUI.markiereZieleFarbig(bewegungsziele);
+    public void checkRichtigeFarbe(List<int[]> bewegungsziele) {
+        if (weissUndRichtigeFigur() || schwarzUndRichtigeFigur()) {
+            SpielGUI.markiereZieleFarbig(bewegungsziele);
+        }
+    }
+
+    public boolean weissUndRichtigeFigur() {
+        return getWerIstDran().equals("Weiß") && pgn[y_arr][x_arr]>0;
+    }
+
+    public boolean schwarzUndRichtigeFigur() {
+        return getWerIstDran().equals("Schwarz") && pgn[y_arr][x_arr]<0;
     }
 
     public void spielEnde() {
