@@ -5,7 +5,6 @@ import alleDateien.mvc.data.SpielSpeichern;
 import alleDateien.mvc.gui.DameZeichnen;
 import alleDateien.mvc.gui.DebugModus;
 import alleDateien.mvc.gui.SpFigZeichnen;
-import alleDateien.mvc.gui.ZeichneRechteck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -82,7 +81,6 @@ public class SpielGUI extends Main {
 
         checkerboard.add(feld[i][j]); // Spielfeld in die Mitte des Bildschirms setzen
 
-
         // Button unsichtbar machen
         spielfeldButtonListener.setBorderPainted(false);
         spielfeldButtonListener.setContentAreaFilled(false);
@@ -103,7 +101,6 @@ public class SpielGUI extends Main {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 10, 0);
-
 
         JPanel zugPanel = new JPanel();
         JLabel zugLabel = new JLabel("Zug von: " + zug_grid);
@@ -214,12 +211,6 @@ public class SpielGUI extends Main {
                 DameZeichnen figur4 = new DameZeichnen("white");
                 spielfeldButtonListener.add(figur4);
                 checkerboard.add(feld[i][j]);
-                break;
-
-            case 6: // Rechteck
-                ZeichneRechteck figur5 = new ZeichneRechteck();
-                spielfeldButtonListener.add(figur5);
-                fenster.add(feld[i][j]);
                 break;
 
             default:
@@ -361,9 +352,17 @@ public class SpielGUI extends Main {
 
     public void setGespeichertePGN() {
         this.pgn = speichern.getGeladenePGN();
+        this.steinpgn = SpielData.steinpgn;
         SpielData.setAktuellepgn(this.pgn);
         SpielData.erstelleSteinpgn(this.pgn);
+    }
+
+    // für Debug
+    public void setPGN(int[][] pgn) {
+        this.pgn = pgn;
         this.steinpgn = SpielData.steinpgn;
+        SpielData.setAktuellepgn(this.pgn);
+        SpielData.erstelleSteinpgn(this.pgn);
     }
 
     public void infoBox() {
@@ -377,10 +376,10 @@ public class SpielGUI extends Main {
         if (spielIstGespeichert()) { // wenn PGN's ungleich
             infoBox();
             if (option == JOptionPane.YES_OPTION) { // abbrechen
-                clearSpielGUI();
+                GUIzuStartseite();
             }
         } else {
-            clearSpielGUI();
+            GUIzuStartseite();
         }
     }
 
@@ -402,7 +401,7 @@ public class SpielGUI extends Main {
         }
     }
 
-    public static void clearSpielGUI() {
+    public static void GUIzuStartseite() {
         fenster.getContentPane().removeAll();
         fenster.setJMenuBar(null);
         fenster.repaint();
@@ -417,13 +416,6 @@ public class SpielGUI extends Main {
 
     public void debugSetzeSpielfigur(int figur) {
         debug.setFigur(figur);
-    }
-
-    public void setPGN(int[][] pgn) {
-        this.pgn = pgn;
-        SpielData.setAktuellepgn(this.pgn);
-        SpielData.erstelleSteinpgn(this.pgn);
-        this.steinpgn = SpielData.steinpgn;
     }
 
     public static void markiereZieleFarbig(java.util.List<int[]> bewegungsziele) {
@@ -443,19 +435,19 @@ public class SpielGUI extends Main {
 
         // Anzeigen des Dialogs
         int option = JOptionPane.showOptionDialog(
-                null,
-                farbe + " hat das Spiel gewonnen!",
-                "Spiel Gewonnen",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                optionen,
-                optionen[0]
+            null,
+            farbe + " hat das Spiel gewonnen!",
+            "Spiel Gewonnen",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            optionen,
+            optionen[0]
         );
 
         // Überprüfen, ob der Button geklickt wurde
         if (option == 0) {
-            clearSpielGUI();
+            GUIzuStartseite();
         }
     }
 }

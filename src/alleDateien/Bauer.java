@@ -46,8 +46,7 @@ public class Bauer extends Spielstein {
             for (List<int[]> pfad : this.bewegungspfadeGehen) {
                 findeZielposition(pfad);
             }
-        }
-        else {
+        } else {
             for (List<int[]> pfad : this.bewegungspfadeSchlagen) {
                 findeZielposition(pfad);
             }

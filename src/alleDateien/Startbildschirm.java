@@ -12,13 +12,13 @@ import static java.lang.System.exit;
 public class Startbildschirm {
     static public JFrame fenster = new Fenster();
     private SpielGUI gui = new SpielGUI();
+    private SpielData data;
 
     public Startbildschirm() {
     }
 
     public void setStartbildschirm() {
         // Design für Hauptbildschirm
-        SpielData data = new SpielData();
         fenster.setLayout(new GridBagLayout());
 
         JPanel elementPanel = new JPanel(new GridBagLayout());
@@ -76,6 +76,9 @@ public class Startbildschirm {
 
     public void starteSpiel() {
         fenster.getContentPane().removeAll();
+
+        erstelleSpielData();
+
         gui.setModus("spiel");
         gui.starteGUI();
         gui.setStandardPGN();
@@ -83,13 +86,21 @@ public class Startbildschirm {
         fenster.repaint();
     }
 
-    // WAS WENN NICHTS GESPEICHERT WURDE?
     public void starteGeladenesSpiel() {
         fenster.getContentPane().removeAll();
         gui.setModus("spiel");
         gui.starteGUI();
-        gui.setGespeichertePGN(); // aus SpielSpeichern die alte PGN als Standard setzen
+        gui.setGespeichertePGN();
         gui.setSpielfeld();
         fenster.repaint();
+    }
+
+    public void erstelleSpielData() {
+        if (this.data == null) {
+            System.out.println("SPIELDATA!!!!!");
+            new SpielData();
+        } else {
+            System.out.println("Keine SpielData!!");
+        }
     }
 }

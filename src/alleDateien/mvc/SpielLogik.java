@@ -27,6 +27,12 @@ public class SpielLogik {
     public SpielLogik() {
     }
 
+    public void aktiviereSpielstein(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
+        setAttributes(i, j, pgn, steinpgn);
+        List<int[]> bewegungsziele = steinpgn[i][j].getBewegungsziele();
+        markierePotentielleFelder(bewegungsziele);
+    }
+
     public void setAttributes(int y, int x, int[][] pgn, Spielstein[][] steinpgn) {
         this.pgn = pgn;
         this.steinpgn = steinpgn;
@@ -39,7 +45,7 @@ public class SpielLogik {
         this.newY = newY;
         this.newX = newX;
         this.zielpunkt = new int[]{newY, newX}; //Hier schauen ob ersetzbar durch zielpunktListe
-        this.zielpunktListe = new ArrayList<>(Arrays.asList(newY, newX));
+        this.zielpunktListe = new ArrayList<>(Arrays.asList(newY, newX)); // so gesehen das selbe wie 'zielpunkt'
 
         if (aktuellerStein!=null && zugIstMoeglich() && richtigeFarbe() && testeZugzwang()) {
             zieheFigur();
@@ -159,12 +165,6 @@ public class SpielLogik {
         }
     }
 
-    public void aktiviereSpielstein(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
-        setAttributes(i, j, pgn, steinpgn);
-        List<int[]> bewegungsziele = steinpgn[i][j].getBewegungsziele();
-        markierePotentielleFelder(bewegungsziele);
-    }
-
     public void markierePotentielleFelder(List<int[]> bewegungsziele) {
         if (weissUndRichtigeFigur() || schwarzUndRichtigeFigur()) {
             SpielGUI.markiereZieleFarbig(bewegungsziele);
@@ -228,7 +228,7 @@ public class SpielLogik {
                 zaehleFiguren(i, j, figurenAnzahl);
             }
         }
-//        SpielGUI.zeigeAnzahlFiguren(figurenAnzahl);
+
         if (figurenAnzahl[0] == 0) {
             farbe = "weiß";
         }
@@ -251,5 +251,9 @@ public class SpielLogik {
             default:
                 break;
         }
+    }
+
+    public int[][] getPgn() {
+        return this.pgn;
     }
 }
