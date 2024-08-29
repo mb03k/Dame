@@ -26,7 +26,7 @@ To-Dos:
 - [X] Bauer können nach unten und oben platziert werden (in 'checkBauerBewegen()')
 - [X] Damen können die eigene Farbe schlagen
 - [X] Debug-Modus: wenn man einen Bauern auf ein Feld setzt in dem es zur Dame werden sollte und man das Spiel startet, bleibt es ein Bauer
-- [ ] Bug: falls ein Bauer übersprungen wird um zum Spielfeldrand zu kommen, wird man keine Dame sondern bleibt ein Bauer
+- [X] Bug: falls ein Bauer übersprungen wird um zum Spielfeldrand zu kommen, wird man keine Dame sondern bleibt ein Bauer -> behoben durch anderen Aufbau der Spiellogik
 - [X] Felder auf die man springen farbig hervorheben
 - [X] Auf Windows Spielfeld schön machen
 - [X] Mehrfachsprünge implementieren
