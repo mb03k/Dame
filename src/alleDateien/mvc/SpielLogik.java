@@ -28,7 +28,6 @@ public class SpielLogik {
     }
 
     public void setAttributes(int y, int x, int[][] pgn, Spielstein[][] steinpgn) {
-        System.out.println("setAttributes");
         this.pgn = pgn;
         this.steinpgn = steinpgn;
         this.y_arr = y;
@@ -163,10 +162,10 @@ public class SpielLogik {
     public void aktiviereSpielstein(int i, int j, Spielstein[][] steinpgn, int[][] pgn) {
         setAttributes(i, j, pgn, steinpgn);
         List<int[]> bewegungsziele = steinpgn[i][j].getBewegungsziele();
-        checkRichtigeFarbe(bewegungsziele);
+        markierePotentielleFelder(bewegungsziele);
     }
 
-    public void checkRichtigeFarbe(List<int[]> bewegungsziele) {
+    public void markierePotentielleFelder(List<int[]> bewegungsziele) {
         if (weissUndRichtigeFigur() || schwarzUndRichtigeFigur()) {
             SpielGUI.markiereZieleFarbig(bewegungsziele);
         }
