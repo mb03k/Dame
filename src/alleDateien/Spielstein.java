@@ -6,7 +6,7 @@ import java.util.List;
 
 public abstract class Spielstein {
     public boolean istBewegungsfaehig() {
-        return true;
+        return false;
     }
 
     public List<int[]> getBewegungsziele() {
@@ -30,6 +30,6 @@ public abstract class Spielstein {
     }
 
     public Boolean getBewegungsfaehig() {
-        return true;
+        return false;
     }
 }

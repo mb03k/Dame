@@ -433,7 +433,7 @@ public class SpielGUI extends Main {
             }
         }
 
-        for (int[] bewegungsziel: bewegungsziele) { // Mögliche Züge färben
+        for (int[] bewegungsziel : bewegungsziele) { // Mögliche Züge färben
             feld[bewegungsziel[0]][bewegungsziel[1]].setBackground(Color.ORANGE);
         }
     }
@@ -457,6 +457,5 @@ public class SpielGUI extends Main {
         if (option == 0) {
             clearSpielGUI();
         }
-
     }
 }
