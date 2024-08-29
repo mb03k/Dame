@@ -36,4 +36,5 @@ To-Dos:
 - [X] neues Spiel, figuren bewegen, speichern und zur Startseite gehen. Wenn man auf neues spiel klickt, wird das gespeicherte Spiel geladen
       -> aber nicht, wenn man das Programm neu startet
       LÖSUNG: 'standardpgn' wird nicht als Attribut der Klasse SpielData initialisiert, sondern per Konstruktor
+- [X] Mögliche Züge wird unabhängig des aktuellen Spielers für beide Steine angezeigt
 ...
