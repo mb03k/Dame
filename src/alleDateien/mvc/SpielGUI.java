@@ -113,47 +113,54 @@ public class SpielGUI extends Main {
         zugPanel.add(zugLabel);
         zugPanel.setBackground(Color.DARK_GRAY);
 
+        // Panel von aktuellem Spieler
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 3; // komplette Breite
+        gbc.gridwidth = 3;
         gbc.weightx = 1.0;
         gbc.weighty = 0.01;
         fenster.add(zugPanel, gbc);
 
         // Panel fuer labels (A-H)
-        JPanel letterPanel = new JPanel(new GridLayout(1, 8));
-        letterPanel.setBackground(Color.DARK_GRAY);
+        JPanel buchstabenPanel = new JPanel(new GridLayout(1, 8));
+        buchstabenPanel.setBackground(Color.DARK_GRAY);
         gbc.gridwidth = 1;
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.weightx = 0.8;
         gbc.weighty = 0.05;
-        fenster.add(letterPanel, gbc);
-
-        for (int col = 0; col < 8; col++) {
-            JLabel letterLabel = new JLabel(String.valueOf((char) ('A' + col)), SwingConstants.CENTER);
-            letterLabel.setForeground(Color.WHITE);
-            letterLabel.setFont(new Font("Arial", Font.BOLD, 20));
-            letterPanel.add(letterLabel);
-        }
+        fenster.add(buchstabenPanel, gbc);
 
         // Panel fuer labels (1-8)
         JPanel nummernPanel = new JPanel(new GridLayout(8, 1));
         nummernPanel.setBackground(Color.DARK_GRAY);
-        gbc.gridx = 0; //
+        gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 0.1;
         gbc.weighty = 0.8;
         fenster.add(nummernPanel, gbc);
 
-        for (int row = 1; row <= 8; row++) {
-            JLabel nummernLabel = new JLabel(String.valueOf(row), SwingConstants.CENTER);
+        setzeSpielfeldMarkierungen(buchstabenPanel, nummernPanel);
+        erzeugeSpielfeldGUI(gbc);
+    }
+
+    public void setzeSpielfeldMarkierungen(JPanel buchstabenPanel, JPanel nummernPanel) {
+        for (int iterator = 0; iterator < 8; iterator++) {
+            JLabel letterLabel = new JLabel(String.valueOf((char) ('a' + iterator)), SwingConstants.CENTER);
+            letterLabel.setForeground(Color.WHITE);
+            letterLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            buchstabenPanel.add(letterLabel);
+        }
+        for (int num=8; num>0; num--) {
+            JLabel nummernLabel = new JLabel(String.valueOf(num), SwingConstants.CENTER);
             nummernLabel.setForeground(Color.WHITE);
             nummernLabel.setFont(new Font("Arial", Font.BOLD, 20));
             nummernLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); // Abstand Rand
             nummernPanel.add(nummernLabel);
         }
+    }
 
+    public void erzeugeSpielfeldGUI(GridBagConstraints gbc) {
         // Spielfeld
         checkerboard = new JPanel();
         checkerboard.setBorder(BorderFactory.createLineBorder(Color.BLACK));
