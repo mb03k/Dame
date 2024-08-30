@@ -14,8 +14,6 @@ public class Dame extends Spielstein {
 
     private final int farbe;
 
-    private final int laufrichtung;
-
     private Boolean zugzwang;
     private Boolean bewegungsfaehig;
 
@@ -32,7 +30,6 @@ public class Dame extends Spielstein {
         this.pos_x = pos_x;
         this.pos_y = pos_y;
         this.farbe = farbe;
-        this.laufrichtung = 0;
         setBewegungsziele(); //ermittle mögliche Zielkoordinaten "bewegungsziele", die Bewegungspfade durch eine Liste aller schritte für jeden Pfad, unf prüfe ob Zugzwang besteht oder bewegungsfähigkeit gegeben ist
     }
 
@@ -51,11 +48,7 @@ public class Dame extends Spielstein {
             }
         }
 
-        if (this.bewegungsziele.isEmpty()) {
-            this.bewegungsfaehig = false;
-        } else {
-            this.bewegungsfaehig = true;
-        }
+        this.bewegungsfaehig = !this.bewegungsziele.isEmpty();
     }
 
     private void findeZielposition(List<int[]> pfad) {
@@ -167,7 +160,7 @@ public class Dame extends Spielstein {
             }
             switch (figur) {
                 case 2:
-                case 1: //Weg ist von eigenem Spielstein versperrt
+                case 1: // Weg ist von eigenem Spielstein versperrt
                     return null;
                 case 0:
                     int[] einSchritt = {i * k, j * k};
@@ -179,7 +172,6 @@ public class Dame extends Spielstein {
                     bewegungspfadeEineRichtung = schlagenOderNichtSchlagen(bewegungspfadeEineRichtung, i, j, k, x, y);
                     return bewegungspfadeEineRichtung;
                 default:
-                    System.out.println("Unbekannter Spielstein");
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;

@@ -41,7 +41,7 @@ public class SpielGUI extends Main {
     }
 
     public void starteGUI() {
-        this.fenster = Startbildschirm.fenster;
+        fenster = Startbildschirm.fenster;
 
         logik = new SpielLogik();
         debug = new DebugModus();
@@ -53,7 +53,7 @@ public class SpielGUI extends Main {
 
     public void setSpielfeld() {
         setMenueBar();
-        setGridLayout();
+        setzeSpielfeldGridLayout();
 
         // Spielfeld (und Farben) erstellen
         for ( int i=0; i<8; i++ ) { // vertikal
@@ -61,15 +61,14 @@ public class SpielGUI extends Main {
                 setSpielfeldInhalte(i, j);
             }
         }
-
-        checkModus();
+        setzeDebugMenuepunkt();
     }
 
     public void setSpielfeldInhalte(int i, int j) {
         JPanel panel = new JPanel();
 
-        spielfeldButtonListener = new JButton(""); // 'zentraler' Button für ActionListener
-        setSpielfeldButton(i,j);
+        spielfeldButtonListener = new JButton("");
+        setSpielfeldButtonLogik(i,j);
 
         panel.add(spielfeldButtonListener);
 
@@ -101,7 +100,7 @@ public class SpielGUI extends Main {
         return ((y+x) % 2 == 1);
     }
 
-    public void setGridLayout() {
+    public void setzeSpielfeldGridLayout() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 10, 0);
@@ -190,11 +189,19 @@ public class SpielGUI extends Main {
         fenster.add(rechtsRand, gbc);
     }
 
-    public void setSpielfeldButton(int i, int j) {
+    public void setSpielfeldButtonLogik(int i, int j) {
         if (modus.equals("spiel")) {
-            setSollGeschlagenWerden(i,j);
+            figurBewegenOderSchlagen(i,j);
         } else {
             spielfeldButtonListener.addActionListener(e -> aktualisierePGN_debug(i, j));
+        }
+    }
+
+    public void figurBewegenOderSchlagen(int i, int j) {
+        if (pgn[i][j]==0) {
+            spielfeldButtonListener.addActionListener(e -> schlageFigur(i, j));
+        } else {
+            spielfeldButtonListener.addActionListener(e -> logik.aktiviereSpielstein(i, j, steinpgn, pgn));
         }
     }
 
@@ -228,7 +235,7 @@ public class SpielGUI extends Main {
         }
     }
 
-    public void checkModus() {
+    public void setzeDebugMenuepunkt() {
         // wenn Benutzer Debug-Modus angeklickt hat, neuen Menüpunkt erstellen
         if (modus.equals("debug")) {
             JMenu debug = new JMenu("Debug");
@@ -254,10 +261,8 @@ public class SpielGUI extends Main {
 
             wBauer.setBackground(Color.decode("#d4d4d4"));
             wDame.setBackground(Color.decode("#d4d4d4"));
-
             bBauer.setBackground(Color.decode("#949494"));
             bDame.setBackground(Color.decode("#949494"));
-
             loeschen.setBackground(Color.decode("#FF7074"));
             spielStarten.setBackground(Color.decode("9498256"));
 
@@ -304,14 +309,6 @@ public class SpielGUI extends Main {
         fenster.repaint();
     }
 
-    public void setSollGeschlagenWerden(int i, int j) {
-        if (pgn[i][j]==0) {
-            spielfeldButtonListener.addActionListener(e -> schlageFigur(i, j));
-        } else {
-            spielfeldButtonListener.addActionListener(e -> logik.aktiviereSpielstein(i, j, steinpgn, pgn));
-        }
-    }
-
     public void schlageFigur(int i, int j) {
         int[][] setzePGN = logik.schlageOderBewege(i, j);
         if (setzePGN != null) {
@@ -332,7 +329,6 @@ public class SpielGUI extends Main {
         this.steinpgn = SpielData.getSteinpgn();
     }
 
-    // Debug-Modus: neue Figuren anzeigen
     public void aktualisierePGN_debug(int y, int x) {
         if (hintergrundIstDunkel(y, x)) {
             // live anzeigen der neuen Steine
@@ -398,8 +394,8 @@ public class SpielGUI extends Main {
 
     public boolean spielIstGespeichert() {
         return !Arrays.deepEquals( // wenn gleich: true; else: false
-                speichern.getGeladenePGN(),
-                this.pgn
+            speichern.getGeladenePGN(),
+            this.pgn
         );
     }
 

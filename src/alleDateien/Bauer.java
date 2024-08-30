@@ -52,12 +52,7 @@ public class Bauer extends Spielstein {
             }
         }
 
-        if (this.bewegungsziele.isEmpty()) {
-            this.bewegungsfaehig = false;
-        }
-        else {
-            this.bewegungsfaehig = true;
-        }
+        this.bewegungsfaehig = !this.bewegungsziele.isEmpty();
     }
 
     private void findeZielposition(List<int[]> pfad) {
@@ -67,11 +62,11 @@ public class Bauer extends Spielstein {
             ziel[1] += schritt[1];
         }
         this.bewegungsziele.add(ziel);
-        List<Integer> keyZiel = convertiereArrayZuListe(ziel); //da HashMap mit int[] als key nicht umgehen kann
+        List<Integer> keyZiel = konvertiereArrayZuListe(ziel); // da HashMap mit int[] als key nicht umgehen kann
         this.bewegungszieleMitPfad.put(keyZiel, pfad);
     }
 
-    private static List<Integer> convertiereArrayZuListe(int[] array) {
+    private static List<Integer> konvertiereArrayZuListe(int[] array) {
         List<Integer> list = new ArrayList<>();
         for (int num : array) {
             list.add(num);
@@ -147,7 +142,7 @@ public class Bauer extends Spielstein {
                     break;
                 case -1:
                 case -2:
-                    sprungweiten[i] = 0; //Weg ist von eigenem Spielstein versperrt
+                    sprungweiten[i] = 0; // Weg ist von eigenem Spielstein versperrt
                     break;
                 default:
                     System.out.println("Unbekannter Spielstein");
