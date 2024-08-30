@@ -79,18 +79,18 @@ public class Dame extends Spielstein {
         int[] sprungweiten = {-1, 1}; //y-Richtung (1), y-Richtung (2)
         List<int[]> bewegungspfadeEineRichtung = new ArrayList<>();
         pruefeBewegungsfaehigkeiten(bewegungspfadeEineRichtung, sprungweiten, x, y);
-        verfolgeBewegungsfaehigkeiten(bewegungspfadeEineRichtung, sprungweiten, x, y);
+        verfolgeBewegungsfaehigkeiten(x, y);
     }
 
     private void pruefeEinenSchritt(int x, int y, List<int[]> bewegungspfadeEineRichtungAlt) {
         int[] sprungweiten = {-1, 1}; //y-Richtung (1), y-Richtung (2)
         List<int[]> bewegungspfadeEineRichtung = new ArrayList<>();
         pruefeBewegungsfaehigkeiten(bewegungspfadeEineRichtung, sprungweiten, x, y);
-        verfolgeBewegungsfaehigkeiten(bewegungspfadeEineRichtung, sprungweiten, x, y, bewegungspfadeEineRichtungAlt);
+        verfolgeBewegungsfaehigkeiten(x, y, bewegungspfadeEineRichtungAlt);
     }
 
     //Step 2:
-    private void verfolgeBewegungsfaehigkeiten(List<int[]> bewegungspfadeEineRichtung, int[] sprungweiten, int x, int y) {
+    private void verfolgeBewegungsfaehigkeiten(int x, int y) {
         for (List<int[]> bewegungspfad : bewegungspfadeMerkeGehen) {
             this.bewegungspfadeGehen.add(bewegungspfad);
         }
@@ -103,7 +103,7 @@ public class Dame extends Spielstein {
         }
     }
 
-    private void verfolgeBewegungsfaehigkeiten(List<int[]> bewegungspfadeEineRichtung, int[] sprungweiten, int x, int y, List<int[]> bewegungspfadeEineRichtungAlt) {
+    private void verfolgeBewegungsfaehigkeiten(int x, int y, List<int[]> bewegungspfadeEineRichtungAlt) {
         if (!this.bewegungspfadeMerkeSchlagen.isEmpty()) {
             List<List<int[]>> bewegungspfadeSchlagen = this.bewegungspfadeMerkeSchlagen;
             this.bewegungspfadeMerkeSchlagen = new ArrayList<>(); //Leeren für nächsten Schritt auf dem Pfad
@@ -134,9 +134,9 @@ public class Dame extends Spielstein {
             bewegungspfadeEineRichtung = pruefeEinFeld(bewegungspfadeEineRichtung, i, j, k, x, y);
             if (bewegungspfadeEineRichtung == null) {
                 return new ArrayList<>();
-            } else if (bewegungspfadeEineRichtung.size() == 0) {
+            } else if (bewegungspfadeEineRichtung.isEmpty()) {
                 count++;
-            } else if (bewegungspfadeEineRichtung.size() > 0) {
+            } else {
                 entferneEinzelschritte(count); //da wenn man springen kann nicht gehen kann
                 this.bewegungspfadeMerkeSchlagen.add(bewegungspfadeEineRichtung);
                 return new ArrayList<>();
@@ -155,7 +155,7 @@ public class Dame extends Spielstein {
         try {
             int figur = aktuellepgn[x + i * k][y + j * k] * this.farbe;
             int[] figurPosition = {x + i * k, y + j * k};
-            if (istPositionEnthalten(this.bereitsGeschlageneFiguren, figurPosition)) { //er darf nur figuren schlagen, die sie noch nicht geschlagen hat, sonst schlägt sie unendlich oft gleiche figur
+            if (istPositionEnthalten(this.bereitsGeschlageneFiguren, figurPosition)) {
                 figur = 0;
             }
             switch (figur) {
